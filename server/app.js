@@ -1,55 +1,57 @@
-const dotenv = require('dotenv');
 const app = require('express')();
 const bodyParser = require('body-parser');
-const { Pool } = require('pg');
-
-dotenv.config();
+const cors = require('cors');
+const { pool } = require('./config');
 
 const port = process.env.PORT_NUMBER || 3000;
+
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }) );
+app.use(cors()); // enable all cors requests
 
-app.use(
-    bodyParser.urlencoded({
-        extended: true,
-    })
-);
+// app.use((req, res, next) => {
+//     // Website you wish to allow to connect
+//     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
 
-app.use((req, res, next) => {
-    // Website you wish to allow to connect
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
+//     // Request headers you wish to allow
+//     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
 
-    // Request headers you wish to allow
-    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+//     next();
+// })
 
-    // Set to true if you need the website to include cookies in the requests sent
-    // to the API (e.g. in case you use sessions)
-    res.setHeader('Access-Control-Allow-Credentials', true);
-
-    next();
-})
-
-const pool = new Pool({
-    user: process.env.POSTGRES_USER,
-    host: process.env.POSTGRES_HOST,
-    database: process.env.POSTGRES_DATABASE,
-    port: process.env.POSTGRES_PORT
-});
 
 app.listen(port, async () => {
     console.log("Listening at port: ", port);
     await pool.connect();
+    console.log("Connected to database")
 });
 
-
 app.get('/', (req, res) => {
-    // pool.query('SELECT * FROM postgresql', (error, results) => {
-    //     if (error) {
-    //       throw error;
-    //     }
-    //     res.send(results);
-    // })
+    pool.query('INSERT INTO ', (error, results) => {
+        if (error) {
+          throw error;
+        }
+        res.send(results);
+    })
 });
 
 app.post('/api/signup', (req, res) => {
-   res.send("Hello")
+    const username = req.body.username;
+    const password = req.body.password; 
+    const salt = 'hello';
+
+    pool.query(`INSERT INTO users (username, password, salt)
+                VALUES('${username}', '${password}', '${salt}')`, (err, result) => {
+        
+        if (err) {
+            res.status(400).json({
+                message: `User failed to save: ${username}`
+            });
+        } else {
+            console.log(result)
+            res.status(200).json({
+                message: `User created with username: ${username}`
+            });
+        }
+    });
 });
