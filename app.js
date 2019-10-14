@@ -6,7 +6,7 @@ const { pool } = require('./config');
 const port = process.env.PORT_NUMBER || 3000;
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }) );
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors()); // enable all cors requests
 
 // app.use((req, res, next) => {
@@ -29,7 +29,7 @@ app.listen(port, async () => {
 app.get('/', (req, res) => {
     pool.query('INSERT INTO ', (error, results) => {
         if (error) {
-          throw error;
+            throw error;
         }
         res.send(results);
     })
@@ -37,21 +37,21 @@ app.get('/', (req, res) => {
 
 app.post('/api/signup', (req, res) => {
     const username = req.body.username;
-    const password = req.body.password; 
+    const password = req.body.password;
     const salt = 'hello';
 
     pool.query(`INSERT INTO users (username, password, salt)
                 VALUES('${username}', '${password}', '${salt}')`, (err, result) => {
-        
-        if (err) {
-            res.status(400).json({
-                message: `User failed to save: ${username}`
-            });
-        } else {
-            console.log(result)
-            res.status(200).json({
-                message: `User created with username: ${username}`
-            });
-        }
-    });
+
+            if (err) {
+                res.status(400).json({
+                    message: `User failed to save: ${username}`
+                });
+            } else {
+                console.log(result)
+                res.status(200).json({
+                    message: `User created with username: ${username}`
+                });
+            }
+        });
 });

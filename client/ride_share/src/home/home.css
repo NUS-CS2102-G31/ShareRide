@@ -1,0 +1,10 @@
+.form {
+    width: 1000px;
+    background-color: white;
+    border-color: red;
+    border: 1px solid;
+    padding: 20px;
+    margin: auto;
+    top: 50%;
+    transform: translateY(50%);
+}
