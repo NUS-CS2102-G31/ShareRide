@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import Register from './components/Register';
 import Profiles from './profile/Profiles'
+import Navigation from './navbar/navbar';
 
 import {
   BrowserRouter as Router,
@@ -31,11 +32,12 @@ function App() {
 
         </header> */}
       </div>
-      <Link to="/signup" > Register </Link>
-      <Link to="/profile" >Profile</Link>
+      <Navigation></Navigation>
+      {/* <Link to="/signup" > Register </Link>
+      <Link to="/profile" >Profile</Link> */}
       <Route path="/signup" component={Register} />
       <Route path="/profile" component={Profiles} />
-      
+
     </Router>
   );
 }

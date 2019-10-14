@@ -11,7 +11,7 @@ import "./Profile.css"
 
 const Profile = props => {
     return (
-        <div className="card text-center">
+        <div className="card text-center profile-box">
             <div className="overflow">
                 <img src={props.imgsrc} alt="" className="img-fluid" />
             </div>
