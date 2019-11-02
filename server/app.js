@@ -35,6 +35,10 @@ app.listen(port, async () => {
 //     })
 // });
 
+app.get('/', (req, res) => {
+    res.send("Welcome to our app");
+})
+
 app.post('/api/signup', (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
