@@ -8,7 +8,7 @@ console.log(`Database url: ${process.env.DATABASE_URL}`);
 
 const pool = new Pool({
     connectionString: isProduction ? process.env.DATABASE_URL: connectionString,
-    ssl: isProduction
+    // ssl: isProduction
 });
 
 module.exports = {
