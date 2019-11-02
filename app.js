@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const { pool } = require('./config');
 
-const port = process.env.PORT_NUMBER || 3000;
+const port = process.env.PORT_NUMBER || 3600;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -26,14 +26,18 @@ app.listen(port, async () => {
     console.log("Connected to database")
 });
 
+// app.get('/', (req, res) => {
+//     pool.query('INSERT INTO ', (error, results) => {
+//         if (error) {
+//             throw error;
+//         }
+//         res.send(results);
+//     })
+// });
+
 app.get('/', (req, res) => {
-    pool.query('INSERT INTO ', (error, results) => {
-        if (error) {
-            throw error;
-        }
-        res.send(results);
-    })
-});
+    res.send("Welcome to our app");
+})
 
 app.post('/api/signup', (req, res) => {
     const username = req.body.username;
