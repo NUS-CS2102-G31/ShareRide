@@ -10,10 +10,10 @@ const { pool } = require('./config');
 
 const PORT = process.env.PORT || 5000;
 
-app.use('/', proxy({
-    target: `http://rideshare-app-nus.herokuapp.com`,
-    changeOrigin: true
-}));
+// app.use('/', proxy({
+//     target: `localhost:3000`,
+//     changeOrigin: true
+// }));
 
 app.use(express.static("client/build"));
 app.use(bodyParser.json());
