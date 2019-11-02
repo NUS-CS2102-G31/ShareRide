@@ -9,40 +9,14 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors()); // enable all cors requests
 
-// app.use((req, res, next) => {
-//     // Website you wish to allow to connect
-//     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3001');
-
-//     // Request headers you wish to allow
-//     res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-
-//     next();
-// })
-
-
-app.listen(port, async () => {
-    console.log("Listening at port: ", port);
-    await pool.connect();
-    console.log("Connected to database")
-});
-
-// app.get('/', (req, res) => {
-//     pool.query('INSERT INTO ', (error, results) => {
-//         if (error) {
-//             throw error;
-//         }
-//         res.send(results);
-//     })
-// });
-
 app.get('/', (req, res) => {
+    console.log(req)
     res.send("Welcome to our app");
 })
 
 app.post('/api/signup', (req, res) => {
     const username = req.body.username;
-    const password = req.body.password;
-    const salt = 'hello';
+    const password = req.body.password; 
 
     pool.query(`INSERT INTO users (username, password, salt)
                 VALUES('${username}', '${password}', '${salt}')`, (err, result) => {
@@ -58,4 +32,10 @@ app.post('/api/signup', (req, res) => {
                 });
             }
         });
+});
+
+app.listen(port, async () => {
+    console.log("Listening at port:", port);
+    await pool.connect();
+    console.log("Connected to database")
 });
