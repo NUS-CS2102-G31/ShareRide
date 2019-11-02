@@ -1,11 +1,19 @@
 require('dotenv').config()
 
 const express = require('express');
+const proxy = require('http-proxy-middleware');
 const app = express();
 
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const { pool } = require('./config');
+
+const PORT = process.env.PORT || 5000;
+
+app.use('/', proxy({
+    target: `http://localhost:${PORT}`,
+    changeOrigin: true
+}));
 
 app.use(express.static("client/build"));
 app.use(bodyParser.json());
@@ -37,9 +45,8 @@ app.post('/api/signup', (req, res) => {
         });
 });
 
-const port = process.env.PORT || 32039;
-app.listen(32039, async () => {
-    console.log("Listening at port:", 32039);
+app.listen(PORT, async () => {
+    console.log("Listening at port:", PORT);
     await pool.connect();
     console.log("Connected to database")
 });
