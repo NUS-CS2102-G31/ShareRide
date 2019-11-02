@@ -11,7 +11,7 @@ const { pool } = require('./config');
 const PORT = process.env.PORT || 5000;
 
 app.use('/', proxy({
-    target: `http://localhost:${PORT}`,
+    target: `http://rideshare-app-nus.herokuapp.com`,
     changeOrigin: true
 }));
 
