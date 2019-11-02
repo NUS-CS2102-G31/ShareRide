@@ -3,8 +3,6 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const { pool } = require('./config');
 
-const port = process.env.PORT_NUMBER || 3600;
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors()); // enable all cors requests
@@ -34,7 +32,8 @@ app.post('/api/signup', (req, res) => {
         });
 });
 
-app.listen(port, async () => {
+const port = process.env.PORT || 5000;
+app.listen(process.env.PORT || 5000, async () => {
     console.log("Listening at port:", port);
     await pool.connect();
     console.log("Connected to database")
