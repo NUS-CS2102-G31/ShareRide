@@ -35,8 +35,8 @@ app.post('/api/signup', (req, res) => {
         });
 });
 
-const port = process.env.PORT || 5000;
-app.listen(process.env.PORT || 5000, async () => {
+const port = process.env.PORT || 32039;
+app.listen(process.env.PORT || 32039, async () => {
     console.log("Listening at port:", port);
     await pool.connect();
     console.log("Connected to database")
