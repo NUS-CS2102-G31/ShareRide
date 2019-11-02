@@ -33,8 +33,11 @@ app.post('/api/signup', (req, res) => {
                 VALUES('${username}', '${password}')`, (err, result) => {
 
             if (err) {
+                console.log(err);
+
                 res.status(400).json({
-                    message: `User failed to save: ${username}`
+                    message: `User failed to save: ${username}`,
+                    error: err
                 });
             } else {
                 console.log(result)
