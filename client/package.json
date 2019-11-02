@@ -11,7 +11,7 @@
     "react-scripts": "3.1.2",
     "reactstrap": "^8.1.1"
   },
-  "proxy": "http://http://rideshare-app-nus.herokuapp.com:32039/",
+  "proxy": "http://localhost:32039/",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
