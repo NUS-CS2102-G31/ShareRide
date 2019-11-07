@@ -12,70 +12,79 @@ export default class Register extends React.Component {
       email: "",
       username: "",
       password: "",
-      confirmPassword: "",
       phone: "",
-      newUser: null,
-      isLoading: false
+      name: "",
+
+      passwordError: "",
+      phoneError: "",
+      nameError: "",
+
+      errorSubmit: null
     };
 
   }
 
-  validateForm() {
-    return (
-      this.state.email.length > 0 &&
-      this.state.password.length > 0 &&
-      this.state.password === this.state.confirmPassword
-    );
-  }
-
-  // renderConfirmationForm() {
-  //   return (
-  //     <form onSubmit={this.handleConfirmationSubmit}>
-  //       <FormGroup controlId="confirmationCode" bsSize="large">
-  //         <FormLabel>Confirmation Code</FormLabel>
-  //         <FormControl
-  //           autoFocus
-  //           type="tel"
-  //           value={this.state.confirmationCode}
-  //           onChange={this.handleChange}
-  //         />
-  //         <HelpBlock>Please check your email for the code.</HelpBlock>
-  //       </FormGroup>
-  //       <LoaderButton
-  //         block
-  //         bsSize="large"
-  //         disabled={!this.validateConfirmationForm()}
-  //         type="submit"
-  //         isLoading={this.state.isLoading}
-  //         text="Verify"
-  //         loadingText="Verifying…"
-  //       />
-  //     </form>
-  //   );
-  // }
-
   handleChange = event => {
+    event.preventDefault();
+    console.log(event.target.name);
     this.setState({
-      [event.target.id]: event.target.value
+      [event.target.name]: event.target.value
     });
   }
 
-  handleSubmit = event => {
+  validateForm = () => {
+    let passwordError;
+    if (this.state.password.length < 8) {
+      passwordError = "Password should be at least 8 characters in length."
+    }
+
+    if (passwordError) {
+      this.setState({
+        passwordError: passwordError
+      });
+      return false;
+    }
+
+    return true;
+  }
+
+  handleSubmit = async event => {
     // Post request to backend
     event.preventDefault();
-    console.log(event)
-    fetch('http://localhost:3600/api/signup', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        username: this.state.email,
-        password: this.state.password,
-      })
-    })
-    // .then(res => alert(res.body.message));
-    alert(`User has been created`)
+
+    if (this.validateForm()) {
+      const response = await fetch('http://localhost:5000/api/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username: this.state.email,
+          password: this.state.password,
+          salt: "this.state.salt"
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        this.setState({
+          email: '',
+          password: '',
+          errorSubmit: false
+        });
+        alert(`User was created with ${this.state.email}!`);
+
+        
+      } else {
+        const err = await response.json();
+
+        this.setState({
+          errorSubmit: true
+        });
+
+        alert(err.message + " possibly due to existing user account.");
+      }
+    }
   }
 
   renderForm() {
@@ -84,22 +93,27 @@ export default class Register extends React.Component {
         <Form onSubmit={this.handleSubmit}>
           <Form.Group controlId="formBasicEmail">
             <Form.Label>Email address</Form.Label>
-            <Form.Control type="email" placeholder="Enter email" />
+            <Form.Control required name="email" type="email" value={this.state.email} placeholder="Enter email" onChange={this.handleChange}/>
             <Form.Text className="text-muted">
               We'll never share your email with anyone else.
-          </Form.Text>
+            </Form.Text>
           </Form.Group>
 
           <Form.Group controlId="formBasicPassword">
             <Form.Label>Password</Form.Label>
-            <Form.Control type="password" placeholder="Password" />
+            <Form.Control required name="password" type="password" value={this.state.password} placeholder="Password" onChange={this.handleChange}/>
           </Form.Group>
-          <Form.Group controlId="formBasicCheckbox">
-            <Form.Check type="checkbox" label="Check me out" />
-          </Form.Group>
+         
+              <Form.Text style={{
+                color: "red"
+              }}>
+                {this.state.passwordError}
+              </Form.Text>
+
           <Button variant="primary" type="submit">
             Submit
-        </Button>
+          </Button>
+        
         </Form>
       </div>
     );

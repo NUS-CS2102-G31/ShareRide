@@ -14,23 +14,27 @@ const PORT = process.env.PORT || 5000;
 //     target: `localhost:3000`,
 //     changeOrigin: true
 // }));
+// if (process.env.NODE_ENV == 'production') {
+    app.use(express.static("client/build"));
+// }
 
-app.use(express.static("client/build"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors()); // enable all cors requests
 
-// app.get('/', (req, res) => {
-//     console.log(req)
-//     res.send("Welcome to our app");
-// });
+app.get('/api/users', (req, res) => {
+    pool.query(`SELECT * FROM users;`, (err, result) => {
+        res.send(result)
+    })
+});
 
 app.post('/api/signup', (req, res) => {
     const username = req.body.username;
     const password = req.body.password; 
+    const salt = req.body.salt;
 
-    pool.query(`INSERT INTO users (username, password)
-                VALUES('${username}', '${password}')`, (err, result) => {
+    pool.query(`INSERT INTO users (username, password, salt)
+                VALUES('${username}', '${password}', '${salt}')`, (err, result) => {
 
             if (err) {
                 console.log(err);
