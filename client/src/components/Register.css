@@ -1,10 +1,11 @@
 .form {
     width: 500px;
-    background-color: white;
+    background-color: rgb(233, 224, 224);
+    box-shadow: 2px 2px;
     border-color: red;
     border: 1px solid;
     padding: 20px;
     margin: auto;
     top: 50%;
-    transform: translateY(50%);
+    transform: translateY(30%);
 }
