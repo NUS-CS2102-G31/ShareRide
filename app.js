@@ -68,9 +68,9 @@ app.post('/api/signup', async (req, res) => {
 app.post('/api/login', (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
-
+    console.log(req.body)
     pool.query(`${search_path}
-        SELECT * FROM users WHERE username = '${username}';`, (err, result) => {
+        SELECT * FROM users WHERE users.username = '${username}';`, (err, result) => {
         console.log(search_path);
         console.log(result)
         console.log(err)
