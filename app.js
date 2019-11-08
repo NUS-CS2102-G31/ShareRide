@@ -19,7 +19,7 @@ const PORT = process.env.PORT || 5000;
 let search_path = "";
 if (process.env.NODE_ENV == 'production') {
     search_path = "SET search_path TO rideshare;";
-    // app.use(express.static("client/build"));
+    app.use(express.static("client/build"));
 }
 
 app.use(bodyParser.json());
