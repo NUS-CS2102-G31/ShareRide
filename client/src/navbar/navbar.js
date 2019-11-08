@@ -33,7 +33,12 @@ class Navigation extends Component {
         return (
             <div>
                 <Navbar color="light" light expand="md">
-                    <NavbarBrand href="/">RIDESHARE</NavbarBrand>
+                    <NavbarBrand href="/">
+                        {/* <img src="rideshare.png" alt="RideShare">
+
+                        </img> */}
+                        RideShare
+                    </NavbarBrand>
                     <NavbarToggler onClick={this.toggle} />
                     <Collapse isOpen={this.state.isOpen} navbar>
                         <Nav className="ml-auto" navbar>

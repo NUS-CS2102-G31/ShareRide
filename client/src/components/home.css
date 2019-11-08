@@ -1,16 +1,12 @@
-.homepage-main{
-
+body {
     background: url(../assets/homepage.jpg) no-repeat center center fixed;
-   
+    height: 100%;
 
-    min-height: 100%; 
-    
-
-    /* Center and scale the image nicely */
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-
+     /* Center and scale the image nicely */
+     background-position: center;
+     background-repeat: no-repeat;
+     background-size: cover;
+ 
 }
 
 h1,  p{
