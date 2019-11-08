@@ -19,32 +19,60 @@ export default class CreateRideForm extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            // title: 'Create ',
+
             index: '',
             datas: [],
+
+            startAddr: "",
+            endAddr: "",
+            startTime: "",
+            endTime: "",
+            startBid: "",
+
             startAddrError: "",
             endAddrError: "",
             startTimeError: "",
             endTimeError: "",
-            startBidError: ""
+            startBidError: "",
 
+            errorSubmit: null
         }
     }
 
-    // validate = () => {
-    //     let startAddrError = "";
-    //     if (!this.state.startAddr.value.includes("@")) {
-    //         startAddrError = "invalid startAddr";
-    //     }
+    validateForm = () => {
+        let startAddrError, endAddrError, startTimeError, endTimeError, startBidError;
+        if (!this.state.startAddr.length > 0) {
+            startAddrError = "Invalid Start Address";
+        } else {
+            startAddrError = "";
+        }
 
+        if (!this.state.endAddr.length > 0 || this.state.endAddr.value == this.state.startAddr.value) {
+            endAddrError = "Invalid End Address : Start and End address should not be the same";
+        } else {
+            endAddrError = "";
+        }
 
-    //     let endAddrError = "";
-    //     let startTimeError = "";
-    //     let endTimeError = "";
-    //     let startBidError = "";
+        if (!this.state.startTime.length > 0) {
+            startTimeError = "Invalid Start Time";
+        } else {
+            startTimeError = "";
+        }
 
-    //     return true;
-    // };
+        if (!this.state.endTime.length > 0) {
+            endTimeError = "Invalid End Time";
+        } else {
+            endTimeError = "";
+        }
+
+        if (!this.state.startBid.length > 0) {
+            startBidError = "Invalid Starting Bid";
+        } else {
+            startBidError = "";
+        }
+
+        return true;
+    };
 
 
     fSubmit = (e) => {
@@ -209,32 +237,4 @@ export default class CreateRideForm extends Component {
     }
 
 }
-
-
-        // CREATE TABLE Advertisements (
-        // 	adId SERIAL PRIMARY KEY,
-        // 	startingBid NUMERIC NOT NULL,
-        // 	RideStartTime TIMESTAMP NOT NULL,
-        // 	bidEndTime TIMESTAMP NOT NULL,
-        // 	rideId SERIAL REFERENCES Rides(rideId) NOT NULL,
-        // 	advertiser TEXT REFERENCES Drivers(username),
-        // 	status INT DEFAULT 1,
-        // 	CHECK(status IN (1, 2, 3)),
-        // 	UNIQUE(rideId)
-        // 	-- 1 Bidding, 2 Completed, 3 Cancelled
-        // );
-
-        // /CREATE TABLE Rides (
-            // 	rideId SERIAL UNIQUE,
-            // 	RideStartTime TIMESTAMP NOT NULL,
-            // 	RideEndTime TIMESTAMP,
-            // 	routeId SERIAL REFERENCES Routes(routeId) NOT NULL,
-            // 	car TEXT REFERENCES Cars(plateNum) NOT NULL,
-            // 	driver TEXT REFERENCES Drivers(username) NOT NULL,
-            // 	price INT NOT NULL,
-            // 	status INT DEFAULT 1,
-            // 	PRIMARY KEY(rideId, driver),
-            // 	CHECK(status IN (1, 2, 3, 4) AND price > 0)
-            // 	-- 1 In progress, 2 Completed, 3 Cancelled by driver, 4 All passengers cancelled
-            // );
 
