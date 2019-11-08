@@ -2,6 +2,8 @@ require('dotenv').config()
 
 const express = require('express');
 const proxy = require('http-proxy-middleware');
+const bcrypt = require('bcrypt');
+
 const app = express();
 
 const bodyParser = require('body-parser');
@@ -33,13 +35,20 @@ app.get('/api/users', (req, res) => {
     })
 });
 
+/**
+ * Sign Up API - username & details
+ */
 app.post('/api/signup', (req, res) => {
+    const name = req.body.name;
     const username = req.body.username;
+    const email = req.body.email;
     const password = req.body.password; 
+    const phone = req.body.phone;
 
-    pool.query(`SET search_path TO rideshare;
-        INSERT INTO users (username, password)
-        VALUES('${username}', '${password}');`, (err, result) => {
+    bcrypt.hash(password, process.env.SALT_ROUNDS, (err, hash) => {
+        pool.query(`SET search_path TO rideshare;
+            INSERT INTO users (username, password, email, fullname, phone)
+            VALUES('${username}', '${hash}', '${email}', '${name}', '${phone}');`, (err, result) => {
             if (err) {
                 res.status(400).json({
                     message: `User failed to save: ${username}`,
@@ -51,6 +60,14 @@ app.post('/api/signup', (req, res) => {
                 });
             }
         });
+    });
+});
+
+app.post('/api/login', (req, res) => {
+    const email = req.body.email;
+    const password = req.body.password;
+
+    // bcrypt.
 });
 
 app.listen(PORT, async () => {

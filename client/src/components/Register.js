@@ -67,28 +67,27 @@ export default class Register extends React.Component {
         },
         body: JSON.stringify({
           "username": this.state.email,
-          "password": this.state.password
+          "password": this.state.password,
+          "email": this.state.email,
+          "phone": this.state.phone,
+          "name": this.state.name
         })
       });
 
       if (response.ok) {
         const data = await response.json();
         this.setState({
-          email: '',
-          password: '',
-          errorSubmit: false
+          email: "",
+          username: "",
+          password: "",
+          phone: "",
+          name: "",
         });
-        alert(`User was created with ${this.state.email}!`);
-
+        alert(data.message);
         
       } else {
         const err = await response.json();
-
-        this.setState({
-          errorSubmit: true
-        });
-
-        alert(err.message + " possibly due to existing user account.");
+        alert(err.message);
       }
     }
   }
