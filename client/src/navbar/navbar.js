@@ -13,6 +13,7 @@ import {
     DropdownMenu,
     DropdownItem
 } from 'reactstrap';
+import "./navbar.css"
 
 
 class Navigation extends Component {
@@ -33,9 +34,11 @@ class Navigation extends Component {
         return (
             <div>
                 <Navbar color="light" light expand="md">
-                    <NavbarBrand href="/">RIDESHARE</NavbarBrand>
+                    <NavLink tag={Link} to="/">   <img src="ridesharelogo.png" className="navbar-brand"></img></NavLink>
+
                     <NavbarToggler onClick={this.toggle} />
                     <Collapse isOpen={this.state.isOpen} navbar>
+
                         <Nav className="ml-auto" navbar>
                             <NavItem>
                                 <NavLink tag={Link} to="/login">Log In</NavLink>

@@ -76,7 +76,7 @@ export default class Register extends React.Component {
         });
         alert(`User was created with ${this.state.email}!`);
 
-        
+
       } else {
         const err = await response.json();
 
@@ -91,53 +91,55 @@ export default class Register extends React.Component {
 
   renderForm() {
     return (
-      <div className="form">
-        <Form onSubmit={this.handleSubmit}>
+      <div className>
+        <div className="form">
+          <Form onSubmit={this.handleSubmit}>
+            <h1 className="text-center signup-text">Sign Up</h1>
+            <Form.Group controlId="formBasicName">
+              <Form.Label>Name</Form.Label>
+              <Form.Control required name="name" type="text" value={this.state.name} placeholder="Enter name" onChange={this.handleChange}>
+              </Form.Control>
+            </Form.Group>
 
-          <Form.Group controlId="formBasicName">
-            <Form.Label>Name</Form.Label>
-            <Form.Control required name="name" type="text" value={this.state.name} placeholder="Enter name" onChange={this.handleChange}>
-            </Form.Control>
-          </Form.Group>
+            <Form.Group controlId="formBasicUsername">
+              <Form.Label>Username</Form.Label>
+              <Form.Control required name="username" type="text" value={this.state.username} placeholder="Enter username" onChange={this.handleChange}>
+              </Form.Control>
+            </Form.Group>
 
-          <Form.Group controlId="formBasicUsername">
-            <Form.Label>Username</Form.Label>
-            <Form.Control required name="username" type="text" value={this.state.username} placeholder="Enter username" onChange={this.handleChange}>
-            </Form.Control>
-          </Form.Group>
-
-          <Form.Group controlId="formBasicEmail">
-            <Form.Label>Email address</Form.Label>
-            <Form.Control required name="email" type="email" value={this.state.email} placeholder="Enter email" onChange={this.handleChange}/>
-            <Form.Text className="text-muted">
-              We'll never share your email with anyone else.
+            <Form.Group controlId="formBasicEmail">
+              <Form.Label>Email address</Form.Label>
+              <Form.Control required name="email" type="email" value={this.state.email} placeholder="Enter email" onChange={this.handleChange} />
+              <Form.Text className="text-muted">
+                We'll never share your email with anyone else.
             </Form.Text>
-          </Form.Group>
+            </Form.Group>
 
-          <Form.Group controlId="formBasicPhone">
-            <Form.Label>Phone</Form.Label>
-            <Form.Control required name="phone" type="text" value={this.state.phone} placeholder="Enter phone number" onChange={this.handleChange}>
-            </Form.Control>
-          </Form.Group>
+            <Form.Group controlId="formBasicPhone">
+              <Form.Label>Phone</Form.Label>
+              <Form.Control required name="phone" type="text" value={this.state.phone} placeholder="Enter phone number" onChange={this.handleChange}>
+              </Form.Control>
+            </Form.Group>
 
-          <Form.Group controlId="formBasicPassword">
-            <Form.Label>Password</Form.Label>
-            <Form.Control required name="password" type="password" value={this.state.password} placeholder="Password" onChange={this.handleChange}/>
-            <Form.Text className="text-muted">
-              {/* Password must be at least 8 characters in length. */}
-            </Form.Text>
-            <Form.Text style={{
-              color: "red"
-            }}>
-              {this.state.passwordError}
-            </Form.Text>
-          </Form.Group>          
+            <Form.Group controlId="formBasicPassword">
+              <Form.Label>Password</Form.Label>
+              <Form.Control required name="password" type="password" value={this.state.password} placeholder="Password" onChange={this.handleChange} />
+              <Form.Text className="text-muted">
+                {/* Password must be at least 8 characters in length. */}
+              </Form.Text>
+              <Form.Text style={{
+                color: "red"
+              }}>
+                {this.state.passwordError}
+              </Form.Text>
+            </Form.Group>
 
-          <Button variant="primary" type="submit">
-            Submit
+            <Button variant="success" type="submit">
+              Sign Up
           </Button>
-        
-        </Form>
+
+          </Form>
+        </div>
       </div>
     );
   }
