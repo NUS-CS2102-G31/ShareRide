@@ -55,7 +55,12 @@ export default class Register extends React.Component {
     event.preventDefault();
 
     if (this.validateForm()) {
-      const response = await fetch('http://localhost:5000/api/signup', {
+      let baseurl = "http://localhost:5000";
+      if (process.env.NODE_ENV == 'production') {
+        baseurl = "http://rideshare-app-nus.herokuapp.com";
+      }
+
+      const response = await fetch(`${baseurl}/api/signup`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

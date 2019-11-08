@@ -1,4 +1,3 @@
-server/.env
 node_modules
-server/.env
 server/.vscode/launch.json
+.env
