@@ -12,7 +12,7 @@ class Profiles extends Component {
         return (
             <Container>
                 <Row className="justify-content-md-center">
-                    <h2>WHAT ARE YOU TODAY?</h2>
+                    <h1 className="profile-header">WHAT ARE YOU TODAY?</h1>
                 </Row>
 
 

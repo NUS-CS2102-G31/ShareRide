@@ -5,6 +5,7 @@
     padding : 30px 20px;
     /* box-shadow: 10px 15px 20px rgba(0, 0, 0, 0.1); */
     border-radius: 10px;
+    background-color:white;
 }
 
 .header {
@@ -22,9 +23,37 @@
     /* box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1); */
     border-radius: 10px;
     margin-bottom:5px;
+    background-color:white;
 }
 
 .ridesList label{
     color: green;
     font-weight : bold;
+}
+
+.header{
+color:white;
+text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.3);
+}
+
+.advertForm input {
+    
+    border-radius: 4px;
+    display: block;
+    width: 100%;
+    height: calc(1.5em + .75rem + 2px);
+    padding: .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #495057;
+    background-color: #fff;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    border-radius: .25rem;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out;
+}
+
+.formGroup.advertForm{
+    padding:10px 15px 20px 15px;
 }

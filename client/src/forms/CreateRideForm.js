@@ -121,7 +121,7 @@ export default class CreateRideForm extends Component {
                     <Row>
                         <Col xs={4}>
                             <h3 className="header text-center">Advertise Your Ride</h3>
-                            <form ref="myForm" className="formGroup">
+                            <form ref="myForm" className="formGroup advertForm">
                                 <div className="my-2">
                                     <Label>Start Address</Label>
                                     <input ref="startAddr" type="text" name="text" id="formStartLocation" placeholder="Enter Start Address" />
