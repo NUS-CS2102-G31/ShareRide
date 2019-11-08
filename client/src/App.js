@@ -7,8 +7,9 @@ import Navigation from './navbar/navbar';
 import DriverForm from './forms/DriverForm'
 import CreateRideForm from './forms/CreateRideForm'
 import Home from './components/Home';
-import SearchRides from './searchRides/SearchRides';
 import Login from './components/Login';
+
+import SearchRides from './searchRides/SearchRides';
 
 import {
   BrowserRouter as Router,
