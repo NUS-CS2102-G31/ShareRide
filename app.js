@@ -68,12 +68,13 @@ app.post('/api/signup', async (req, res) => {
 app.post('/api/login', (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
-    console.log(req.body)
     pool.query(`${search_path}
-        SELECT * FROM users WHERE users.username = '${username}';`, (err, result) => {
-        console.log(search_path);
-        console.log(result)
-        console.log(err)
+        SELECT * FROM users WHERE users.username = '${username}';`, (err, results) => {
+        console.log(results)
+        console.log(results[0])
+        console.log(results[1])
+        console.log(results[1].rowCount)
+
         if (result.rowCount > 0) {
             let hash = result.rows[0].password;
             bcrypt.compare(password, hash, (err, result) => {
