@@ -8,6 +8,7 @@ import DriverForm from './forms/DriverForm'
 import CreateRideForm from './forms/CreateRideForm'
 import Home from './components/Home';
 import SearchRides from './searchRides/SearchRides';
+import Signup from './components/Signup';
 
 import {
   BrowserRouter as Router,
@@ -40,13 +41,14 @@ function App() {
       {/* <Link to="/signup" > Register </Link>
       <Link to="/profile" >Profile</Link> */}
       <Route exact path="/" component={Home} />
-      <Route path="/signup" component={Register} />
+      <Route path="/login" component={Register} />
+      <Route path="/signup" component={Signup} />
       <Route path="/profile" component={Profiles} />
       <Route path="/forms" component={DriverForm} />
       <Route path="/advertiseRide" component={CreateRideForm} />
       <Route path="/searchRides" component={SearchRides} />
 
-    </Router>
+    </Router >
   );
 }
 
