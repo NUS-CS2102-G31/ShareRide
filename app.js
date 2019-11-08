@@ -37,7 +37,7 @@ app.post('/api/signup', (req, res) => {
     const password = req.body.password; 
 
     pool.query(`INSERT INTO users (username, password)
-                VALUES('${username}', '${password}')`, (err, result) => {
+                VALUES('${username}', '${password}');`, (err, result) => {
             if (err) {
                 res.status(400).json({
                     message: `User failed to save: ${username}`,
@@ -55,5 +55,6 @@ app.listen(PORT, async () => {
     console.log("Listening at port:", PORT);
     await pool.connect();
     console.log("Connected to database");
-    await pool.query('SET search_path TO rideshare');
+    await pool.query('SET search_path TO rideshare;');
+    console.log("Set search path to rideshare");
 });
