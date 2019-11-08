@@ -16,16 +16,18 @@ const PORT = process.env.PORT || 5000;
 //     target: `localhost:3000`,
 //     changeOrigin: true
 // }));
-// if (process.env.NODE_ENV == 'production') {
-    app.use(express.static("client/build"));
-// }
+let search_path = "";
+if (process.env.NODE_ENV == 'production') {
+    search_path = "SET search_path TO rideshare;";
+    // app.use(express.static("client/build"));
+}
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors()); // enable all cors requests
 
 app.get('/api/users', (req, res) => {
-    pool.query(`SET search_path TO rideshare;
+    pool.query(`
     SELECT * FROM users;`, (err, result) => {
         if (err) {
             res.send(err);
@@ -38,15 +40,15 @@ app.get('/api/users', (req, res) => {
 /**
  * Sign Up API - username & details
  */
-app.post('/api/signup', (req, res) => {
+app.post('/api/signup', async (req, res) => {
     const name = req.body.name;
     const username = req.body.username;
     const email = req.body.email;
     const password = req.body.password; 
     const phone = req.body.phone;
 
-    bcrypt.hash(password, process.env.SALT_ROUNDS, (err, hash) => {
-        pool.query(`SET search_path TO rideshare;
+    bcrypt.hash(password, parseInt(process.env.SALT_ROUNDS) || 10, (err, hash) => {
+        pool.query(`${search_path}
             INSERT INTO users (username, password, email, fullname, phone)
             VALUES('${username}', '${hash}', '${email}', '${name}', '${phone}');`, (err, result) => {
             if (err) {
@@ -64,16 +66,36 @@ app.post('/api/signup', (req, res) => {
 });
 
 app.post('/api/login', (req, res) => {
-    const email = req.body.email;
+    const username = req.body.username;
     const password = req.body.password;
 
-    // bcrypt.
+    pool.query(`${search_path}SELECT * FROM users WHERE username = '${username}';`, (err, result) => {
+        if (result.rowCount > 0) {
+            let hash = result.rows[0].password;
+            
+            bcrypt.compare(password, hash, (err, result) => {
+                if (result) {
+                    res.status(200).json({
+                        message: `User: ${username} login details are correct.`
+                    })
+                } else {
+                    res.status(401).json({
+                        message: `User: ${username} is unauthorized to login`
+                    });
+                } 
+            });
+        } else {
+            res.status(401).json({
+                message: `User: ${username} is unauthorized to login`
+            });
+        }
+    });
+    
 });
 
 app.listen(PORT, async () => {
     console.log("Listening at port:", PORT);
     await pool.connect();
     console.log("Connected to database");
-    await pool.query('SET search_path TO rideshare;');
-    console.log("Set search path to rideshare");
+    // await pool.query('SET search_path TO rideshare;');
 });
