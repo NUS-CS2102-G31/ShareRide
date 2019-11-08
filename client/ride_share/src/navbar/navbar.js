@@ -38,16 +38,19 @@ class Navigation extends Component {
                     <Collapse isOpen={this.state.isOpen} navbar>
                         <Nav className="ml-auto" navbar>
                             <NavItem>
-                                <NavLink tag={Link} to="/signup">Register</NavLink>
+                                <NavLink tag={Link} to="/login">Log In</NavLink>
+                            </NavItem>
+                            <NavItem>
+                                <NavLink tag={Link} to="/signup">Sign Up</NavLink>
                             </NavItem>
                             <NavItem>
                                 <NavLink tag={Link} to="/profile">Profile</NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink tag={Link} to="/profile">Search Rides</NavLink>
+                                <NavLink tag={Link} to="/searchRides">Search Rides</NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink tag={Link} to="/profile">Advertise a Ride</NavLink>
+                                <NavLink tag={Link} to="/advertiseRide">Advertise a Ride</NavLink>
                             </NavItem>
 
                             {/* <UncontrolledDropdown nav inNavbar>

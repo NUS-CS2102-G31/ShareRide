@@ -7,6 +7,7 @@ import {
     Button
 } from "react-bootstrap";
 import "./Profile.css"
+import { Link } from 'react-router-dom';
 
 
 const Profile = props => {
@@ -17,7 +18,9 @@ const Profile = props => {
             </div>
             <div className="card-body text-dark">
                 <h4 className="card-title">{props.title}</h4>
-                <a href="#" className="btn btn-outline-success">{props.button}</a>
+                <Link tag={Link} to={props.link}>
+                    <a className="btn btn-outline-success">{props.button}</a>
+                </Link>
             </div>
         </div>
 

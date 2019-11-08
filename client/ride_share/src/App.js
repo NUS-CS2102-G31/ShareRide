@@ -4,6 +4,11 @@ import './App.css';
 import Register from './components/Register';
 import Profiles from './profile/Profiles'
 import Navigation from './navbar/navbar';
+import DriverForm from './forms/DriverForm'
+import CreateRideForm from './forms/CreateRideForm'
+import Home from './components/Home';
+import SearchRides from './searchRides/SearchRides';
+import Signup from './components/Signup';
 
 import {
   BrowserRouter as Router,
@@ -27,7 +32,7 @@ function App() {
             target="_blank"
             rel="noopener noreferrer"
           > }
-            Learn React
+              Learn React
           </a>
 
         </header> */}
@@ -35,11 +40,17 @@ function App() {
       <Navigation></Navigation>
       {/* <Link to="/signup" > Register </Link>
       <Link to="/profile" >Profile</Link> */}
-      <Route path="/signup" component={Register} />
+      <Route exact path="/" component={Home} />
+      <Route path="/login" component={Register} />
+      <Route path="/signup" component={Signup} />
       <Route path="/profile" component={Profiles} />
+      <Route path="/forms" component={DriverForm} />
+      <Route path="/advertiseRide" component={CreateRideForm} />
+      <Route path="/searchRides" component={SearchRides} />
 
     </Router>
   );
 }
+
 
 export default App;
