@@ -83,14 +83,8 @@ export default class Register extends React.Component {
           phone: "",
           name: "",
         });
-<<<<<<< HEAD
-        alert(`User was created with ${this.state.email}!`);
-
-
-=======
         alert(data.message);
-        
->>>>>>> d064aa553784dfa39f8a6097138278395efe1b03
+
       } else {
         const err = await response.json();
         alert(err.message);
