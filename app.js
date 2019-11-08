@@ -23,7 +23,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors()); // enable all cors requests
 
 app.get('/api/users', (req, res) => {
-    pool.query(`SELECT * FROM users;`, (err, result) => {
+    pool.query(`SET search_path TO rideshare;
+    SELECT * FROM users;`, (err, result) => {
         if (err) {
             res.send(err);
         } else {
