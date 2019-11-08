@@ -66,9 +66,8 @@ export default class Register extends React.Component {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          username: this.state.email,
-          password: this.state.password,
-          salt: "this.state.salt"
+          "username": this.state.email,
+          "password": this.state.password
         })
       });
 
