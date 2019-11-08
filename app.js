@@ -24,27 +24,26 @@ app.use(cors()); // enable all cors requests
 
 app.get('/api/users', (req, res) => {
     pool.query(`SELECT * FROM users;`, (err, result) => {
-        res.send(result)
+        if (err) {
+            res.send(err);
+        } else {
+            res.send(result);
+        }
     })
 });
 
 app.post('/api/signup', (req, res) => {
     const username = req.body.username;
     const password = req.body.password; 
-    const salt = req.body.salt;
 
-    pool.query(`INSERT INTO users (username, password, salt)
-                VALUES('${username}', '${password}', '${salt}')`, (err, result) => {
-
+    pool.query(`INSERT INTO users (username, password)
+                VALUES('${username}', '${password}')`, (err, result) => {
             if (err) {
-                console.log(err);
-
                 res.status(400).json({
                     message: `User failed to save: ${username}`,
                     error: err
                 });
             } else {
-                console.log(result)
                 res.status(200).json({
                     message: `User created with username: ${username}`
                 });
@@ -55,5 +54,6 @@ app.post('/api/signup', (req, res) => {
 app.listen(PORT, async () => {
     console.log("Listening at port:", PORT);
     await pool.connect();
-    console.log("Connected to database")
+    console.log("Connected to database");
+    await pool.query('SET search_path TO rideshare');
 });
