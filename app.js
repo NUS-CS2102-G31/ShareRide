@@ -70,9 +70,10 @@ app.post('/api/login', (req, res) => {
     const password = req.body.password;
 
     pool.query(`${search_path}SELECT * FROM users WHERE username = '${username}';`, (err, result) => {
+        console.log(search_path);
+        console.log(result)
         if (result.rowCount > 0) {
             let hash = result.rows[0].password;
-            
             bcrypt.compare(password, hash, (err, result) => {
                 if (result) {
                     res.status(200).json({
