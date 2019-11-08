@@ -37,8 +37,9 @@ app.post('/api/signup', (req, res) => {
     const username = req.body.username;
     const password = req.body.password; 
 
-    pool.query(`INSERT INTO users (username, password)
-                VALUES('${username}', '${password}');`, (err, result) => {
+    pool.query(`SET search_path TO rideshare;
+        INSERT INTO users (username, password)
+        VALUES('${username}', '${password}');`, (err, result) => {
             if (err) {
                 res.status(400).json({
                     message: `User failed to save: ${username}`,
