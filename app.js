@@ -1,7 +1,6 @@
 require('dotenv').config()
 
 const express = require('express');
-const proxy = require('http-proxy-middleware');
 const bcrypt = require('bcrypt');
 
 const app = express();
@@ -12,11 +11,7 @@ const { pool } = require('./config');
 
 const PORT = process.env.PORT || 5000;
 
-// app.use('/', proxy({
-//     target: `localhost:3000`,
-//     changeOrigin: true
-// }));
-let search_path = "";
+let search_path = "SELECT 1;";
 if (process.env.NODE_ENV == 'production') {
     search_path = "SET search_path TO rideshare;";
     app.use(express.static("client/build"));
@@ -28,11 +23,11 @@ app.use(cors()); // enable all cors requests
 
 app.get('/api/users', (req, res) => {
     pool.query(`${search_path}
-    SELECT * FROM users;`, (err, result) => {
+    SELECT * FROM users;`, (err, results) => {
         if (err) {
             res.send(err);
         } else {
-            res.send(result);
+            res.send(results[1]);
         }
     })
 });
@@ -77,8 +72,9 @@ app.post('/api/login', (req, res) => {
             bcrypt.compare(password, hash, (err, result) => {
                 if (result) {
                     res.status(200).json({
-                        message: `User: ${username} login details are correct.`
-                    })
+                        message: `User: ${username} login details are correct.`,
+                        username: queryResult.rows[0].username
+                    });
                 } else {
                     res.status(401).json({
                         message: `User: ${username} is unauthorized to login`
@@ -93,6 +89,63 @@ app.post('/api/login', (req, res) => {
     });
     
 });
+
+/**
+ * GET List of Rides
+ */
+
+app.get('/api/rides', (req, res) => {
+    const origin = req.query.origin;
+    const destination = req.query.destination;
+    const seats = req.query.seats;
+    
+    pool.query(`${search_path}
+        SELECT Rides.driver, Rides.car, Routes.origin, Routes.destination, Rides.rideStartTime, Cars.numSeats FROM Rides 
+        INNER JOIN Routes ON Rides.routeId = Routes.routeId 
+        INNER JOIN Cars ON Cars.carplate = Rides.car
+        WHERE Routes.origin = '${origin}' AND Routes.destination = '${destination}' AND Cars.numSeats >= ${seats};`, (err, results) => {
+            console.log(results)
+            if (err) {
+                res.status(500).json({
+                    message: err
+                });
+            } else {
+                const queryResult = results[1];
+                const rides = queryResult.rows;
+                console.log(rides)
+                
+                res.status(200).json({
+                    data: rides,
+                    message: `${queryResult.rowCount} number of rides are retrieved`
+                });
+            }
+    });    
+});
+
+/** 
+ * GET Profile of Driver & Statistics
+ */
+app.get('/api/profile', (req, res) => {
+    const username = req.query.username;
+    
+    pool.query(`${search_path}
+        `, (err, results) => {
+            if (err) {
+                res.status(500).json({
+                    message: err
+                });
+            } else {
+                const queryResult = results[1];
+                const rides = queryResult.rows;
+                
+                res.status(200).json({
+                    data: rides,
+                    message: `${queryResult.rowCount} number of rides are retrieved`
+                });
+            }
+    });    
+});
+
 
 app.listen(PORT, async () => {
     console.log("Listening at port:", PORT);
