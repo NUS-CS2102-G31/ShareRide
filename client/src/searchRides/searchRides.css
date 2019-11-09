@@ -6,3 +6,42 @@
 .searchRidesForm{
     background-color:white;
 }
+
+.rides-list{
+    background-color:white;
+    border: 1px solid rgb(235, 235, 235);
+    border-radius: 10px;
+    padding: 10px 20px;
+    /* box-shadow: 10px 15px 20px rgba(0, 0, 0, 0.1); */
+    border-radius: 10px;
+   
+}
+
+.rides-list p{
+    color:black;
+}
+
+.post-price{
+    float:right;
+}
+
+.post-car{
+    display:block;
+}
+
+.pull-left {float:left;}
+.pull-right {float:right;}
+
+.post-price{
+    font-size:30px;
+    transform: translateY(100%);
+    color : #00A372;
+}
+/* 
+.line-separator{
+    height:1px;
+
+    background:#717171;
+    
+    border-bottom:1px solid #313030;
+} */

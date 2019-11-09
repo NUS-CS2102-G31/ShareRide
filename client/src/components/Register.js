@@ -4,6 +4,7 @@ import {
   Form,
   Button
 } from "react-bootstrap";
+import { Switch, Route } from 'react-router-dom';
 
 export default class Register extends React.Component {
   constructor(props) {
@@ -53,6 +54,7 @@ export default class Register extends React.Component {
   handleSubmit = async event => {
     // Post request to backend
     event.preventDefault();
+    const { history } = this.props;
 
     if (this.validateForm()) {
       let baseurl = "http://localhost:5000";
@@ -84,6 +86,7 @@ export default class Register extends React.Component {
           name: "",
         });
         alert(data.message);
+        history.push('/profile');
 
       } else {
         const err = await response.json();
