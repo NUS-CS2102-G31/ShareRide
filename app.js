@@ -1,7 +1,6 @@
 require('dotenv').config()
 
 const express = require('express');
-const proxy = require('http-proxy-middleware');
 const bcrypt = require('bcrypt');
 
 const app = express();
@@ -16,7 +15,8 @@ const PORT = process.env.PORT || 5000;
 //     target: `localhost:3000`,
 //     changeOrigin: true
 // }));
-let search_path = "";
+let search_path = "SELECT 1;";
+
 if (process.env.NODE_ENV == 'production') {
     search_path = "SET search_path TO rideshare;";
     app.use(express.static("client/build"));
@@ -93,6 +93,36 @@ app.post('/api/login', (req, res) => {
     });
     
 });
+
+/**
+ * Rides
+ */
+
+app.get('/api/rides', (req, res) => {
+    const origin = req.query.origin;
+    const destination = req.query.destination;
+    
+    pool.query(`${search_path}
+        SELECT Rides.driver, Rides.car, Routes.origin, Routes.destination, Rides.ridestarttime, Cars.numseats FROM Rides 
+        INNER JOIN Routes ON Rides.routeId = Routes.routeId 
+        INNER JOIN Cars ON Cars.carplate = Rides.car
+        WHERE Routes.origin = '${origin}' AND Routes.destination = '${destination}'`, (err, results) => {
+            if (err) {
+                res.status(500).json({
+                    message: err
+                });
+            } else {
+                const queryResult = results[1];
+                const rides = queryResult.rows;
+                
+                res.status(200).json({
+                    data: rides,
+                    message: `${queryResult.rowCount} number of rides are retrieved`
+                });
+            }
+    });    
+});
+
 
 app.listen(PORT, async () => {
     console.log("Listening at port:", PORT);
