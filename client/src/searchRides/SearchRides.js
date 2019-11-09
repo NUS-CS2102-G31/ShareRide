@@ -27,6 +27,7 @@ export default class SearchRides extends Component {
 
             yourBid: ""
         };
+        this.textInput = React.createRef();
     }
 
 
@@ -75,15 +76,37 @@ export default class SearchRides extends Component {
 
     }
 
-    fSubmitBid = (e) => {
+    fSubmitBid = async (e) => {
         e.preventDefault();
+        const { history } = this.props;
+
         let baseurl = "http://localhost:5000";
         if (process.env.NODE_ENV === 'production') {
             baseurl = "https://rideshare-app-nus.herokuapp.com";
+        }   
+
+        const username = localStorage.getItem('myUsernameStorage');
+        if (!username) {
+            alert('You are not logged in');
+            history.push('/login');
         }
 
+        const response = await fetch(`${baseurl}/api/bid`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "username": username,
+                "bid": 10
+            })
+        })
 
-        
+        if (response.ok) {
+            alert("New bid successful")
+        } else {
+            alert("Failed to bid")
+        }
 
     }
 
@@ -171,7 +194,7 @@ export default class SearchRides extends Component {
                                                         </Row>
                                                         <Row>
                                                             <Label>Enter Your Bid :</Label>
-                                                            <input ref="yourBid" type="number" name="text" step="0.1" className="submitBidForm" placeholder="Starting Bid ($)" />
+                                                            <input ref={this.textInput} type="number" name="yourBid" id="yourBid" step="0.1" className="submitBidForm" placeholder="Starting Bid ($)" />
                                                             <Button onClick={(e) => this.fSubmitBid(e)} outline color="success">Submit Bid</Button>{' '}
                                                         </Row>
 

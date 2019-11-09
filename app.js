@@ -293,6 +293,27 @@ app.get('/api/routes', (req, res) => {
         });
 });
 
+app.post('/api/bid', (req, res) => {
+    const username = req.body.username;
+    const bid = req.body.bid;
+
+    pool.query(`${search_path}
+        INSERT INTO Bids VALUES(${Math.round(Math.random() * 100)},'${username}', ${bid});`, (err, results) => {
+        let result = results[1];
+
+        if (err) {
+            res.status(400).json({
+                err: err
+            })
+        } else {
+            res.status(200).json({
+                data: result,
+                err: null
+            })
+        }
+    })
+});
+
 
 app.listen(PORT, async () => {
     console.log("Listening at port:", PORT);
