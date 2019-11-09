@@ -24,7 +24,6 @@ export default class Driver extends Component {
             // avgEarnings: "-1"
             fullName: '',
             username: '',
-            carType: '',
             email: '',
             phone: '',
             avgPassengers: '',
@@ -58,7 +57,6 @@ export default class Driver extends Component {
             this.setState({
                 fullName: resp.data.fullName,
                 username: resp.data.username,
-                carType: resp.data.carType,
                 email: resp.data.email,
                 phone: resp.data.phone,
                 avgPassengers: resp.data.totalPassengers,

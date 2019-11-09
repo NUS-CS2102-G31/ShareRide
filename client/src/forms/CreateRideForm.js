@@ -7,12 +7,19 @@ import {
     Form,
     Button,
 
+
     FormGroup,
     Label,
     Input
 
 } from "reactstrap";
 import moment from 'moment';
+
+import {
+    Dropdown,
+    DropdownMenu,
+    DropdownToggle
+} from "react-bootstrap"
 
 
 
@@ -25,8 +32,10 @@ export default class CreateRideForm extends Component {
             index: '',
             datas: [],
 
-            startAddr: "",
-            endAddr: "",
+            routes: [],
+
+            // startAddr: "",
+            // endAddr: "",
             startTime: "",
             endTime: "",
             startBid: "",
@@ -41,65 +50,79 @@ export default class CreateRideForm extends Component {
         }
     }
 
-    validateForm = () => {
-        let startAddrError, endAddrError, startTimeError, endTimeError, startBidError;
-        if (!this.state.startAddr.length > 0) {
-            startAddrError = "Invalid Start Address";
-        } else {
-            startAddrError = "";
-        }
+    async componentDidMount() {
+        let baseurl = "http://localhost:5000";
+        // if (process.env.NODE_ENV === 'production') {
+        baseurl = "http://rideshare-app-nus.herokuapp.com";
+        // }
 
-        if (!this.state.endAddr.length > 0 || this.state.endAddr.value == this.state.startAddr.value) {
-            endAddrError = "Invalid End Address : Start and End address should not be the same";
-        } else {
-            endAddrError = "";
-        }
+        const response = await fetch(`${baseurl}/api/routes`, {
+            method: 'GET'
+        });
 
-        if (!this.state.startTime.length > 0) {
-            startTimeError = "Invalid Start Time";
-        } else {
-            startTimeError = "";
+        if (response.ok) {
+            const resp = await response.json();
+            this.setState({
+                routes: resp.data
+            });
         }
+    }
 
-        if (!this.state.endTime.length > 0) {
-            endTimeError = "Invalid End Time";
-        } else {
-            endTimeError = "";
-        }
+    // validateForm = () => {
+    //     let startAddrError, endAddrError, startTimeError, endTimeError, startBidError;
+    //     if (!this.state.startAddr.length > 0) {
+    //         startAddrError = "Invalid Start Address";
+    //     } else {
+    //         startAddrError = "";
+    //     }
 
-        if (!this.state.startBid.length > 0) {
-            startBidError = "Invalid Starting Bid";
-        } else {
-            startBidError = "";
-        }
+    //     if (!this.state.endAddr.length > 0 || this.state.endAddr.value == this.state.startAddr.value) {
+    //         endAddrError = "Invalid End Address : Start and End address should not be the same";
+    //     } else {
+    //         endAddrError = "";
+    //     }
 
-        return true;
-    };
+    //     if (!this.state.startTime.length > 0) {
+    //         startTimeError = "Invalid Start Time";
+    //     } else {
+    //         startTimeError = "";
+    //     }
+
+    //     if (!this.state.endTime.length > 0) {
+    //         endTimeError = "Invalid End Time";
+    //     } else {
+    //         endTimeError = "";
+    //     }
+
+    //     if (!this.state.startBid.length > 0) {
+    //         startBidError = "Invalid Starting Bid";
+    //     } else {
+    //         startBidError = "";
+    //     }
+
+    //     return true;
+    // };
 
 
     fSubmit = async (e) => {
         e.preventDefault();
         const { history } = this.props;
-
-        // const isValid = this.validate();
-        // if (isValid) {
-        //     console.log(this.state);
-        // }
-
         let datas = this.state.datas;
-        let startAddr = this.refs.startAddr.value;
-        let endAddr = this.refs.endAddr.value;
+        // let startAddr = this.refs.startAddr.value;
+        // let endAddr = this.refs.endAddr.value;
         let date = this.refs.date.value;
         let startTime = this.refs.startTime.value;
         let endTime = this.refs.endTime.value;
         let startBid = this.refs.startBid.value;
 
-        let data = { startAddr, endAddr, date, startTime, endTime, startBid }
+        let data = { date, startTime, endTime, startBid }
 
         let baseUrl = `http://localhost:5000`;
-        if (process.env.NODE_ENV === "production") {
-            baseUrl = "http://rideshare-app-nus.herokuapp.com";
-        }
+        // if (process.env.NODE_ENV === "production") {
+        baseUrl = "http://rideshare-app-nus.herokuapp.com";
+        // }
+
+
 
         const username = localStorage.getItem('myUsernameStorage');
         if (!username) {
@@ -113,8 +136,8 @@ export default class CreateRideForm extends Component {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                "origin": startAddr,
-                "destination": endAddr,
+                // "origin": startAddr,
+                // "destination": endAddr,
                 "date": date,
                 "startTime": startTime,
                 "endTime": endTime,
@@ -157,29 +180,30 @@ export default class CreateRideForm extends Component {
         })
     }
 
-    fEdit = (i) => {
-        let data = this.state.datas[i];
+    // fEdit = (i) => {
+    //     let data = this.state.datas[i];
 
-        this.refs.startAddr.value = data.startAddr;
-        this.refs.endAddr.value = data.endAddr;
-        this.refs.date.value = data.date;
-        this.refs.startTime.value = data.startTime;
-        this.refs.endTime.value = data.endTime;
-        this.refs.startBid.value = data.startBid;
+    //     this.refs.startAddr.value = data.startAddr;
+    //     this.refs.endAddr.value = data.endAddr;
+    //     this.refs.date.value = data.date;
+    //     this.refs.startTime.value = data.startTime;
+    //     this.refs.endTime.value = data.endTime;
+    //     this.refs.startBid.value = data.startBid;
 
-        // this.refs.name.value = data.name;
-        // this.refs.address.value = data.address;
-        this.setState({
-            act: 1,
-            index: i
-        });
-        this.refs.startAddr.focus();
-    }
+    //     // this.refs.name.value = data.name;
+    //     // this.refs.address.value = data.address;
+    //     this.setState({
+    //         act: 1,
+    //         index: i
+    //     });
+    //     this.refs.startAddr.focus();
+    // }
 
 
 
     render() {
         let datas = this.state.datas;
+        let routes = this.state.routes
         return (
             <div className="advertiseForm">
 
@@ -188,19 +212,17 @@ export default class CreateRideForm extends Component {
                     <Row>
                         <Col xs={4}>
                             <h3 className="header text-center">Advertise Your Ride</h3>
+
+
                             <form ref="myForm" className="formGroup advertForm">
-                                <div className="my-2">
-                                    <Label>Start Address</Label>
-                                    <input ref="startAddr" type="text" name="origin" id="formStartLocation" placeholder="Enter Start Address" />
-                                    <small style={{ color: "red" }}>{this.state.startAddrError}</small>
-                                </div>
 
-
-                                <div className="my-2">
-                                    <Label>End Address</Label>
-                                    <input ref="endAddr" type="text" name="destination" id="formEndLocation" placeholder="Enter End Address" />
-                                    <small>{this.state.endAddrError}</small>
-                                </div>
+                                <select className="browser-default custom-select">
+                                    <option> Select Routes</option>
+                                    {routes.map((route, i) =>
+                                        <option key={i} className="dropdown">
+                                            {route.origin + " -> " + route.destination}</option>
+                                    )}
+                                </select>
 
                                 <div className="my-2">
                                     <Label>Date</Label>
@@ -217,7 +239,7 @@ export default class CreateRideForm extends Component {
                                 <div className="my-2">
                                     <Label>End Time</Label>
                                     <input ref="endTime" type="time" name="endTime" id="formEndTime" placeholder="Enter End Time" />
-                                    <small>{this.state.endAddrError}</small>
+                                    <small>{this.state.endTimeError}</small>
                                 </div>
 
                                 <div className="my-2">
@@ -253,12 +275,10 @@ export default class CreateRideForm extends Component {
                                                 </Col> */}
                                             </Row>
                                             <Row>
-
                                             </Row>
                                         </Container>
 
                                         <Button onClick={(e) => this.fRemove(e)} outline color="success">Delete</Button>{' '}
-                                        {/* <Button onClick={(e) => this.fEdit(e)} outline color="success">Edit</Button>{' '} */}
                                     </div>
                                 )}
                             </pre>
@@ -276,4 +296,3 @@ export default class CreateRideForm extends Component {
     }
 
 }
-

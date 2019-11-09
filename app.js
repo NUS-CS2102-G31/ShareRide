@@ -2,6 +2,7 @@ require('dotenv').config()
 
 const express = require('express');
 const bcrypt = require('bcrypt');
+const cron = require('node-cron');
 
 const app = express();
 
@@ -298,4 +299,45 @@ app.listen(PORT, async () => {
     await pool.connect();
     console.log("Connected to database");
     // await pool.query('SET search_path TO rideshare;');
+
+
+    cron.schedule('*/30 * * * * *', () => {
+        pool.query(`${search_path}
+        SELECT cb.adid, cb.currentbid as winningbid
+                FROM (SELECT * 
+                    FROM bids b
+                    INNER JOIN advertisements A ON b.adid = A.adid 
+                    WHERE A.bidendtime < NOW() 
+                    GROUP BY b.adid) cb
+                INNER JOIN Drivers d ON LOWER(cb.advertiser) = LOWER(d.username)
+                INNER JOIN Cars c ON LOWER(d.carplate) = LOWER(c.carplate) 
+                ORDER BY cb.currentbid DESC
+                LIMIT 1 OFFSET c.numseats`, (err, results) => {
+            if (results) {
+
+                results[1].rows.forEach(win => {
+                    pool.query(`${search_path}
+                    SELECT Bids.adId,Rides.rideId,Bids.bidder
+                        FROM Bids
+                        INNER JOIN Advertisements ON Advertisements.adId = Bids.adId
+                        INNER JOIN Rides ON Advertisements.rideId = Rides.rideId
+                        INNER JOIN Cars ON LOWER(Rides.car) = LOWER(Cars.carPlate)
+                        WHERE Bids.adId = '${win.adId}' AND Advertisements.bidEndTime < NOW()
+                        ORDER BY Bids.currentBid DESC
+                        LIMIT Cars.numSeats;`, (err, result) => {
+                        if (result) {
+                            result[1].rows.forEach(person => {
+                                pool.query(`INSERT INTO Bookings(passenger, rideId, initialPrice, paymentAmount, paymentStatus) 
+                                            VALUES(person.bidder, person.rideId,win.currentbid,0.8*parseFloat(win.currentbid),1)`)
+                                    if (result) {
+                                        console.log("Bookings updated");
+                                    }
+                            })
+    
+                        }
+                    })
+                });
+            }
+        }); 
+    })
 });

@@ -58,7 +58,7 @@ export default class Register extends React.Component {
 
     if (this.validateForm()) {
       let baseurl = "http://localhost:5000";
-      if (process.env.NODE_ENV == 'production') {
+      if (process.env.NODE_ENV === 'production') {
         baseurl = "http://rideshare-app-nus.herokuapp.com";
       }
 
