@@ -12,6 +12,7 @@ import {
     Input
 
 } from "reactstrap";
+import moment from 'moment';
 
 
 export default class SearchRides extends Component {
@@ -84,8 +85,14 @@ export default class SearchRides extends Component {
             this.setState({
                 posts: resp.data
             });
+
+            if (this.state.posts.length == 0) {
+                alert("No rides found for that route!");
+            }
+
         } else {
-            console.log(response.json().message)
+            const error = await response.json();
+            alert(error.message);
         }
     }
 
