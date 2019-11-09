@@ -61,6 +61,7 @@ export default class Login extends Component {
     handleSubmit = async event => {
         event.preventDefault();
         const { history } = this.props;
+
         // history.push('/');
 
         // this.props.history.push("/");
@@ -98,7 +99,9 @@ export default class Login extends Component {
                     errorSubmit: false
                 });
                 //HISTORY PUSH IS A REACT ROUTER LIBRARY THAT 
-                history.push('/');
+                alert('Login Succesful');
+                history.push('/profile');
+
 
             } else {
                 const err = await response.json();
