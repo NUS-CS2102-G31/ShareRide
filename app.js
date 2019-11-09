@@ -231,7 +231,7 @@ app.post('/api/advertise', (req, res) => {
         SELECT ${startBid}, '${endTime}', MAX(rideId), '${driver}' FROM Rides;`, (err, results) => {
             let result = results[1];
             if (result.rowCount) {
-                
+
             } else {
 
             }
@@ -264,6 +264,26 @@ app.post('/api/reset', (req, res) => {
         });
     });
         
+});
+
+
+/**
+ * GET Routes
+ */
+app.get('/api/routes', (req, res) => {
+    pool.query(`${search_path}
+        SELECT routeId, origin, destination FROM routes`, (err, results) => {
+            const queryResult = results[1];
+            if (queryResult.rowCount) {
+                res.status(200).json({
+                    data: queryResult.rows
+                });
+            } else {
+                res.status(200).json({
+                    data: []
+                });
+            }
+        });
 });
 
 
