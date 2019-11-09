@@ -14,6 +14,7 @@ import {
 } from "reactstrap";
 
 
+
 export default class CreateRideForm extends Component {
 
     constructor(props) {
@@ -75,8 +76,9 @@ export default class CreateRideForm extends Component {
     };
 
 
-    fSubmit = (e) => {
+    fSubmit = async (e) => {
         e.preventDefault();
+        const { history } = this.props;
 
         // const isValid = this.validate();
         // if (isValid) {
@@ -93,12 +95,50 @@ export default class CreateRideForm extends Component {
 
         let data = { startAddr, endAddr, date, startTime, endTime, startBid }
 
+        let baseUrl = `http://localhost:5000`;
+        if (process.env.NODE_ENV === "production") {
+            baseUrl = "http://rideshare-app-nus.herokuapp.com";
+        }
+
+        const username = localStorage.getItem('username');
+        if (!username) {
+            alert('You are not logged in');
+            history.push('/login');
+        }
+
+        const response = await fetch(`${baseUrl}/api/advertise`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "origin": startAddr,
+                "destination": endAddr,
+                "date": date,
+                "startTime": startTime,
+                "endTime": endTime,
+                "startBid": startBid,
+                "username": username
+            })
+        })
+
+        if (response.ok) {
+
+        }
+
+
+
         datas.push(data);
 
         this.setState({
             datas: datas,
             act: 0
         });
+
+
+
+
+
         this.refs.myForm.reset();
         this.refs.startAddr.focus();
     }
@@ -132,13 +172,6 @@ export default class CreateRideForm extends Component {
 
 
 
-
-
-
-
-
-
-
     render() {
         let datas = this.state.datas;
         return (
@@ -152,38 +185,38 @@ export default class CreateRideForm extends Component {
                             <form ref="myForm" className="formGroup advertForm">
                                 <div className="my-2">
                                     <Label>Start Address</Label>
-                                    <input ref="startAddr" type="text" name="text" id="formStartLocation" placeholder="Enter Start Address" />
+                                    <input ref="startAddr" type="text" name="origin" id="formStartLocation" placeholder="Enter Start Address" />
                                     <small style={{ color: "red" }}>{this.state.startAddrError}</small>
                                 </div>
 
 
                                 <div className="my-2">
                                     <Label>End Address</Label>
-                                    <input ref="endAddr" type="text" name="text" id="formEndLocation" placeholder="Enter End Address" />
+                                    <input ref="endAddr" type="text" name="destination" id="formEndLocation" placeholder="Enter End Address" />
                                     <small>{this.state.endAddrError}</small>
                                 </div>
 
                                 <div className="my-2">
                                     <Label>Date</Label>
-                                    <input ref="date" type="date" name="text" id="formDate" placeholder="Enter Date" />
+                                    <input ref="date" type="date" name="date" id="formDate" placeholder="Enter Date" />
                                     <small>{this.state.date}</small>
                                 </div>
 
                                 <div className="my-2">
                                     <Label>Start Time</Label>
-                                    <input ref="startTime" type="time" name="text" id="formStartTime" placeholder="Enter Start Time" />
+                                    <input ref="startTime" type="time" name="startTime" id="formStartTime" placeholder="Enter Start Time" />
                                     <small>{this.state.startTimeError}</small>
                                 </div>
 
                                 <div className="my-2">
                                     <Label>End Time</Label>
-                                    <input ref="endTime" type="time" name="text" id="formEndTime" placeholder="Enter End Time" />
+                                    <input ref="endTime" type="time" name="endTime" id="formEndTime" placeholder="Enter End Time" />
                                     <small>{this.state.endAddrError}</small>
                                 </div>
 
                                 <div className="my-2">
                                     <Label>Starting Bid ($)</Label>
-                                    <input ref="startBid" type="number" name="text" step="0.1" id="formEndTime" placeholder="Enter Starting Bid" />
+                                    <input ref="startBid" type="number" name="startBid" step="0.1" id="formEndTime" placeholder="Enter Starting Bid" />
                                     <small>{this.state.startBidError}</small>
                                 </div>
                                 <Button onClick={(e) => this.fSubmit(e)} outline color="success">Submit</Button>{' '}

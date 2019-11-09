@@ -10,6 +10,7 @@ const cors = require('cors');
 const { pool } = require('./config');
 
 const PORT = process.env.PORT || 5000;
+const moment = require('moment');
 
 let search_path = "SELECT 1;";
 if (process.env.NODE_ENV === 'production') {
@@ -203,6 +204,66 @@ app.get('/api/profile', (req, res) => {
                 }
             }
     });    
+});
+
+
+/**
+ * POST Adverstise Ride
+ */
+app.post('/api/advertise', (req, res) => {
+    const origin = req.body.origin;
+    const destination = req.body.destination;
+    const date = req.body.date;
+    const startTime = req.body.startTime;
+    const endTime = req.body.endTime;
+    const startBid = req.body.startBid;
+    const username = req.body.username;
+
+    const startTimeDate = moment(`${date} ${startTime}`, "YYYY-MM-DD HH:mm").format("YYYY-MM-DD HH:mm:ssZ");
+    console.log(startTimeDate)
+
+    pool.query(`${search_path}
+        INSERT INTO Rides(rideId, rideStartTime, routeId, car, driver, status) 
+        SELECT '${startTime}', 1, Drivers.car, '${username}', 1
+        FROM Drivers
+        WHERE Drivers.username = '${username}';
+        INSERT INTO Advertisements(adId, startingBid, bidEndTime, rideId, advertiser)
+        SELECT ${startBid}, '${endTime}', MAX(rideId), '${driver}' FROM Rides;`, (err, results) => {
+            let result = results[1];
+            if (result.rowCount) {
+                
+            } else {
+
+            }
+        });
+
+});
+
+/**
+ * POST Change Password
+ */
+app.post('/api/reset', (req, res) => {
+    const username = req.body.username;
+    const password = req.body.password;
+
+    bcrypt.hash(password, parseInt(process.env.SALT_ROUNDS) || 10, (err, hash) => {
+        pool.query(`${search_path}
+            UPDATE users 
+            SET password = '${hash}'
+            WHERE username = '${username}';`, (err, result) => {
+            if (err) {
+                res.status(400).json({
+                    message: `User failed to change password: ${username}`,
+                    error: err
+                });
+            } else {
+                res.status(200).json({
+                    message: `User changed password: ${username}`
+                });
+            }
+        });
+    });
+        
 });
 
 

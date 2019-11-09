@@ -63,18 +63,7 @@ export default class Login extends Component {
         const { history } = this.props;
 
 
-        // history.push('/');
-
-        // this.props.history.push("/");
-        // console.log('DICKBIG');
-        // alert('kontol');
-
-
-
         if (this.validateForm()) {
-
-
-
             let baseurl = "http://localhost:5000";
             if (process.env.NODE_ENV == 'production') {
                 baseurl = "http://rideshare-app-nus.herokuapp.com";
@@ -111,7 +100,7 @@ export default class Login extends Component {
                     errorSubmit: true
                 });
                 console.log(err)
-                alert(`User failed to save ${err.error.detail}`);
+                alert(`User failed to save`);
             }
         }
     }

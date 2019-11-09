@@ -53,6 +53,8 @@ export default class Driver extends Component {
         if (response.ok) {
             const resp = await response.json();
 
+            resp.data.avgEarnings = parseFloat(resp.data.avgEarnings).toFixed(2);
+
             this.setState({
                 fullName: resp.data.fullName,
                 username: resp.data.username,
