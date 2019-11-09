@@ -23,7 +23,9 @@ export default class SearchRides extends Component {
             origin: '',
             destination: '',
             passengers: 0,
-            posts: []
+            posts: [],
+
+            yourBid: ''
         };
     }
 
@@ -72,15 +74,7 @@ export default class SearchRides extends Component {
         }
     }
 
-    // fetch(`${baseurl}/api/rides?origin=${this.state.}&destination=${this.state}`)
 
-
-    // render() {
-    //     const { posts } = this.state;
-    //     return (
-
-    //     )
-    // }
 
 
     render() {
@@ -153,7 +147,15 @@ export default class SearchRides extends Component {
                                                         </Row>
                                                     </Col>
                                                     <Col xs={2}>
-                                                        <h5 className="post-price">{post.price}</h5>
+                                                        <Row>
+                                                            <h5 className="post-price">{post.price}</h5>
+                                                        </Row>
+                                                        <Row>
+                                                            <Label>Enter Your Bid : ($)</Label>
+                                                            <input ref="yourBid" type="number" name="text" step="0.1" id="formEndTime" placeholder="Enter Starting Bid" />
+                                                            <small>{this.state.startBidError}</small>
+                                                        </Row>
+
                                                     </Col>
                                                 </Row>
                                             </Container>

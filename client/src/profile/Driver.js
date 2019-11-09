@@ -15,21 +15,59 @@ export default class Driver extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            fullName: "Adi Yoga Prataman",
-            username: "adisukaprata69",
-            carType: "Toyota Bobrok",
-            email: "adi29@gmail.com",
-            phone: "0912323",
-            avgPassengers: "1",
-            avgEarnings: "-1"
+            // fullName: "",
+            // username: "adisukaprata69",
+            // carType: "Toyota Bobrok",
+            // email: "adi29@gmail.com",
+            // phone: "0912323",
+            // avgPassengers: "1",
+            // avgEarnings: "-1"
+            fullName: '',
+            username: '',
+            carType: '',
+            email: '',
+            phone: '',
+            avgPassengers: '',
+            avgEarnings: ''
         };
+    }
+
+    componentDidMount() {
+        const { history } = this.props;
+
+        let baseurl = "http://localhost:5000";
+        if (process.env.NODE_ENV === 'production') {
+            baseurl = "http://rideshare-app-nus.herokuapp.com";
+        }
+
+        let username = localStorage.getItem('myUsernameStorage');
+        if (!username) {
+            alert('user not logged in');
+            history.push('/');
+        }
+
+        const response = fetch(`${baseurl}/api/profile?username=${username}`, {
+            method: 'GET'
+        });
+
+        if (response.ok) {
+            const resp = response.json();
+
+            this.setState({
+                fullName: resp.data.fullName,
+                username: resp.data.username,
+                carType: resp.data.carType,
+                email: resp.data.email,
+                phone: resp.data.phone,
+                avgPassengers: resp.data.avpPassengers,
+                avgEarnings: resp.data.avgEarnings
+            });
+        }
     }
 
     render() {
         return (
-
             <div className="card">
-
                 <div className="card-header">
                     <img src="driverProfile.png" className="full-width"></img>
                 </div>
@@ -47,13 +85,3 @@ export default class Driver extends Component {
         )
     }
 }
-
-
-
-// class Driver extends Component {
-//     render() {
-
-//     }
-// }
-
-// export default Driver;
