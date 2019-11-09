@@ -25,7 +25,7 @@ export default class SearchRides extends Component {
             passengers: 0,
             posts: [],
 
-            yourBid: ''
+            yourBid: ""
         };
     }
 
@@ -72,7 +72,19 @@ export default class SearchRides extends Component {
             const error = await response.json();
             alert(error.message);
         }
+
     }
+
+    fSubmitBid = (e) => {
+        e.preventDefault();
+        let baseurl = "http://localhost:5000";
+        if (process.env.NODE_ENV === 'production') {
+            baseurl = "http://rideshare-app-nus.herokuapp.com";
+        }
+
+    }
+
+
 
 
 
@@ -113,32 +125,40 @@ export default class SearchRides extends Component {
                                 {
                                     this.state.posts.map(post =>
                                         <div key={post.id} align="start" className="rides-list mb-3 line-separator">
+
                                             <Container>
                                                 <Row>
                                                     <Col xs={3}>
                                                         <Row>
                                                             <h3 className="post-driver">{post.driver}</h3>
+
                                                         </Row>
                                                         <Row>
                                                             <small className="post-car">{post.car}</small>
+                                                            {/* <small className="post-car">{this.state.car}</small> */}
 
                                                         </Row>
                                                         <Row>
                                                             <small className="post-capacity">{post.capacity + " seats available"} </small>
+                                                            {/* <small className="post-capacity">{this.state.capacity + " seats available"} </small> */}
                                                         </Row>
                                                     </Col>
                                                     <Col xs={7}>
                                                         <Row>
                                                             <p className="pull-left"><b>Departure: &nbsp;</b></p>
                                                             <p className="pull-right">{post.origin}</p>
+                                                            {/* <p className="pull-right">{this.state.origin}</p> */}
                                                         </Row>
                                                         <Row>
                                                             <p className="pull-left"><b>Arrival:&nbsp;</b></p>
                                                             <p className="pull-right">{post.destination}</p>
+                                                            {/* <p className="pull-right">{this.props.destination}</p> */}
                                                         </Row>
                                                         <Row>
                                                             <p className="pull-left"><b>Departure Time:&nbsp;</b></p>
+
                                                             <p className="pull-right">{post.ridestarttime}</p>
+                                                            {/* <p className="pull-right">{this.props.ridestarttime}</p> */}
                                                         </Row>
                                                         <Row>
                                                             <p className="pull-left"><b>Departure Time</b></p>
@@ -149,11 +169,12 @@ export default class SearchRides extends Component {
                                                     <Col xs={2}>
                                                         <Row>
                                                             <h5 className="post-price">{post.price}</h5>
+                                                            {/* <h5 className="post-price">{this.props.price}</h5> */}
                                                         </Row>
                                                         <Row>
-                                                            <Label>Enter Your Bid : ($)</Label>
-                                                            <input ref="yourBid" type="number" name="text" step="0.1" id="formEndTime" placeholder="Enter Starting Bid" />
-                                                            <small>{this.state.startBidError}</small>
+                                                            <Label>Enter Your Bid :</Label>
+                                                            <input ref="yourBid" type="number" name="text" step="0.1" className="submitBidForm" placeholder="Starting Bid ($)" />
+                                                            <Button onClick={(e) => this.fSubmitBid(e)} outline color="success">Submit Bid</Button>{' '}
                                                         </Row>
 
                                                     </Col>
@@ -169,7 +190,4 @@ export default class SearchRides extends Component {
             </div >
         )
     }
-
-
-
 }

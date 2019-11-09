@@ -24,7 +24,6 @@ export default class Driver extends Component {
             // avgEarnings: "-1"
             fullName: '',
             username: '',
-            carType: '',
             email: '',
             phone: '',
             avgPassengers: '',
@@ -32,7 +31,7 @@ export default class Driver extends Component {
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         const { history } = this.props;
 
         let baseurl = "http://localhost:5000";
@@ -46,7 +45,7 @@ export default class Driver extends Component {
             history.push('/');
         }
 
-        const response = fetch(`${baseurl}/api/profile?username=${username}`, {
+        const response = await fetch(`${baseurl}/api/profile?username=${username}`, {
             method: 'GET'
         });
 
@@ -56,7 +55,6 @@ export default class Driver extends Component {
             this.setState({
                 fullName: resp.data.fullName,
                 username: resp.data.username,
-                carType: resp.data.carType,
                 email: resp.data.email,
                 phone: resp.data.phone,
                 avgPassengers: resp.data.avpPassengers,

@@ -12,6 +12,7 @@ import {
     Input
 
 } from "reactstrap";
+import moment from 'moment';
 
 
 export default class CreateRideForm extends Component {
@@ -75,7 +76,7 @@ export default class CreateRideForm extends Component {
     };
 
 
-    fSubmit = (e) => {
+    fSubmit = async (e) => {
         e.preventDefault();
 
         // const isValid = this.validate();
@@ -88,10 +89,9 @@ export default class CreateRideForm extends Component {
         let endAddr = this.refs.endAddr.value;
         let date = this.refs.date.value;
         let startTime = this.refs.startTime.value;
-        let endTime = this.refs.endTime.value;
         let startBid = this.refs.startBid.value;
 
-        let data = { startAddr, endAddr, date, startTime, endTime, startBid }
+        let data = { startAddr, endAddr, date, startTime, startBid }
 
         datas.push(data);
 
@@ -101,6 +101,36 @@ export default class CreateRideForm extends Component {
         });
         this.refs.myForm.reset();
         this.refs.startAddr.focus();
+
+        let baseurl = "http://localhost:5000";
+        if (process.env.NODE_ENV === 'production') {
+            baseurl = "http://rideshare-app-nus.herokuapp.com";
+        }
+
+        const response = await fetch(`${baseurl}/api/advertisement?startAddr=${this.state.startAddr}&endAddr=${this.state.endAddr}&date=${this.state.date}`, {
+            method: 'GET'
+        });
+
+
+        if (response.ok) {
+            const resp = await response.json();
+
+            resp.data.forEach(async (val, idx, arr) => {
+                arr[idx].ridestarttime = moment(val.ridestarttime).format("dddd, MMMM Do YYYY, h:mm a");
+            })
+
+            this.setState({
+                posts: resp.data
+            });
+
+            if (this.state.posts.length == 0) {
+                alert("No rides found for that route!");
+            }
+
+        } else {
+            const error = await response.json();
+            alert(error.message);
+        }
     }
 
     fRemove = (i) => {
@@ -118,7 +148,6 @@ export default class CreateRideForm extends Component {
         this.refs.endAddr.value = data.endAddr;
         this.refs.date.value = data.date;
         this.refs.startTime.value = data.startTime;
-        this.refs.endTime.value = data.endTime;
         this.refs.startBid.value = data.startBid;
 
         // this.refs.name.value = data.name;
@@ -175,18 +204,18 @@ export default class CreateRideForm extends Component {
                                     <small>{this.state.startTimeError}</small>
                                 </div>
 
-                                <div className="my-2">
+                                {/* <div className="my-2">
                                     <Label>End Time</Label>
                                     <input ref="endTime" type="time" name="text" id="formEndTime" placeholder="Enter End Time" />
                                     <small>{this.state.endAddrError}</small>
-                                </div>
+                                </div> */}
 
                                 <div className="my-2">
                                     <Label>Starting Bid ($)</Label>
                                     <input ref="startBid" type="number" name="text" step="0.1" id="formEndTime" placeholder="Enter Starting Bid" />
                                     <small>{this.state.startBidError}</small>
                                 </div>
-                                <Button onClick={(e) => this.fSubmit(e)} outline color="success">Submit</Button>{' '}
+                                <Button onClick={(e) => this.fSubmit(e)} outline color="success">Submit</Button>
 
 
 
@@ -195,7 +224,7 @@ export default class CreateRideForm extends Component {
 
                         <Col xs={8}>
                             <h3 className="header text-center">Your Rides</h3>
-                            <pre>
+                            <div>
                                 {datas.map((data, i) =>
                                     <div key={i} className="ridesList">
                                         <Container>
@@ -207,7 +236,7 @@ export default class CreateRideForm extends Component {
                                                 <Col xs={5}>
                                                     <Row><label>Date       :</label>{data.date} </Row>
                                                     <Row><label>Start Time :</label>{data.startTime} </Row>
-                                                    <Row><label>End Time   :</label>{data.endTime} </Row>
+                                                    {/* <Row><label>End Time   :</label>{data.endTime} </Row> */}
                                                 </Col>
                                                 <Col xs={2}>
                                                     <Row><label>Starting Bid :</label>{data.startBid}</Row>
@@ -222,7 +251,7 @@ export default class CreateRideForm extends Component {
                                         {/* <Button onClick={(e) => this.fEdit(e)} outline color="success">Edit</Button>{' '} */}
                                     </div>
                                 )}
-                            </pre>
+                            </div>
                         </Col>
 
                     </Row>
