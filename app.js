@@ -129,19 +129,76 @@ app.get('/api/profile', (req, res) => {
     const username = req.query.username;
     
     pool.query(`${search_path}
-        `, (err, results) => {
+        SELECT * FROM Users WHERE Users.username = '${username}';`, (err, results) => {
             if (err) {
                 res.status(500).json({
                     message: err
                 });
             } else {
                 const queryResult = results[1];
-                const rides = queryResult.rows;
-                
-                res.status(200).json({
-                    data: rides,
-                    message: `${queryResult.rowCount} number of rides are retrieved`
-                });
+                let profileData = {};
+
+                if (queryResult.rowCount) {
+                    profileData = queryResult.rows[0];
+                    pool.query(`${search_path}
+                        WITH DriverAveEarnings AS (
+                            SELECT R.driver, AVG(price) avePrice
+                            FROM Rides R
+                            WHERE R.price IS NOT NULL 
+                            GROUP BY R.driver
+                        ),
+            
+                        PassengersPerRide AS (
+                            SELECT b.rideId, r.driver, COUNT(DISTINCT passenger) total_passengers
+                            FROM Bookings b
+                            INNER JOIN Rides r
+                            ON r.rideId = b.rideId
+                            WHERE b.paymentStatus = 2
+                            GROUP BY b.rideId, r.driver
+                        )
+            
+                        SELECT d.driver, d.avePrice AS avg_earnings, p.total_passengers AS total_passengers
+                        FROM DriverAveEarnings d, PassengersPerRide p
+                        WHERE d.driver = p.driver AND LOWER(d.driver) = LOWER('${username}');`, (err, results) => {
+                            let stats = results[1];
+                            
+                            if (stats.rowCount) {
+                                let statsData = stats.rows[0];
+                                let data = {
+                                    fullName: profileData.fullName,
+                                    username: profileData.username,
+                                    email: profileData.email,
+                                    phone: profileData.phone,
+                                    totalPassengers: statsData.total_passengers,
+                                    avgEarnings: statsData.avg_earnings
+                                };
+
+                                res.status(200).json({
+                                    data: data,
+                                    message: `Profile data is as shown for user`
+                                });
+                            } else {                
+                                let data = {
+                                    fullName: profileData.fullName,
+                                    username: profileData.username,
+                                    email: profileData.email,
+                                    phone: profileData.phone,
+                                    totalPassengers: 0,
+                                    avgEarnings: 0
+                                }
+                                
+                                res.status(200).json({
+                                    data: data,
+                                    message: `No data found for driver, drive more!`
+                                });
+                            }   
+
+                        });     
+                } else {
+                    res.status(400).json({
+                        message: `User ${username} profile data not found`
+                    });
+                }
             }
     });    
 });
