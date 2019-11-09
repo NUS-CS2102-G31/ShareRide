@@ -27,7 +27,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors()); // enable all cors requests
 
 app.get('/api/users', (req, res) => {
-    pool.query(`
+    pool.query(`${search_path}
     SELECT * FROM users;`, (err, result) => {
         if (err) {
             res.send(err);
@@ -68,11 +68,12 @@ app.post('/api/signup', async (req, res) => {
 app.post('/api/login', (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
+    pool.query(`${search_path}
+        SELECT * FROM users WHERE users.username = '${username}';`, (err, results) => {
+        const queryResult = results[1];
 
-    pool.query(`${search_path}SELECT * FROM users WHERE username = '${username}';`, (err, result) => {
-        if (result.rowCount > 0) {
-            let hash = result.rows[0].password;
-            
+        if (queryResult.rowCount > 0) {
+            let hash = queryResult.rows[0].password;
             bcrypt.compare(password, hash, (err, result) => {
                 if (result) {
                     res.status(200).json({
