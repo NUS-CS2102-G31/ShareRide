@@ -12,7 +12,7 @@ const { pool } = require('./config');
 const PORT = process.env.PORT || 5000;
 
 let search_path = "SELECT 1;";
-if (process.env.NODE_ENV == 'production') {
+if (process.env.NODE_ENV === 'production') {
     search_path = "SET search_path TO rideshare;";
     app.use(express.static("client/build"));
 }
@@ -63,10 +63,12 @@ app.post('/api/signup', async (req, res) => {
 app.post('/api/login', (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
+    console.log(req.body)
     pool.query(`${search_path}
         SELECT * FROM users WHERE users.username = '${username}';`, (err, results) => {
         const queryResult = results[1];
-
+        
+        console.log(queryResult)
         if (queryResult.rowCount > 0) {
             let hash = queryResult.rows[0].password;
             bcrypt.compare(password, hash, (err, result) => {

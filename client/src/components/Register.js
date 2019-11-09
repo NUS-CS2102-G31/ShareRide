@@ -68,7 +68,7 @@ export default class Register extends React.Component {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          "username": this.state.email,
+          "username": this.state.username,
           "password": this.state.password,
           "email": this.state.email,
           "phone": this.state.phone,
@@ -90,7 +90,7 @@ export default class Register extends React.Component {
 
       } else {
         const err = await response.json();
-        alert(err.message);
+        alert(err.error.detail);
       }
     }
   }

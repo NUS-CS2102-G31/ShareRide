@@ -32,7 +32,7 @@ export default class Driver extends Component {
         };
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         const { history } = this.props;
 
         let baseurl = "http://localhost:5000";
@@ -46,12 +46,12 @@ export default class Driver extends Component {
             history.push('/');
         }
 
-        const response = fetch(`${baseurl}/api/profile?username=${username}`, {
+        const response = await fetch(`${baseurl}/api/profile?username=${username}`, {
             method: 'GET'
         });
 
         if (response.ok) {
-            const resp = response.json();
+            const resp = await response.json();
 
             this.setState({
                 fullName: resp.data.fullName,
@@ -59,7 +59,7 @@ export default class Driver extends Component {
                 carType: resp.data.carType,
                 email: resp.data.email,
                 phone: resp.data.phone,
-                avgPassengers: resp.data.avpPassengers,
+                avgPassengers: resp.data.totalPassengers,
                 avgEarnings: resp.data.avgEarnings
             });
         }
