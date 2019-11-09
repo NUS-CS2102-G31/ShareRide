@@ -12,7 +12,6 @@ import {
     Input
 
 } from "reactstrap";
-import posts from './rides.js';
 
 
 export default class SearchRides extends Component {
@@ -20,7 +19,10 @@ export default class SearchRides extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            posts: posts
+            origin: '',
+            destination: '',
+            passengers: 0,
+            posts: []
         };
     }
 
@@ -56,8 +58,36 @@ export default class SearchRides extends Component {
     //     { id: 3, driver: "Candra Winata", car: "Honda Jazz", price: "10", startAddr: "Heng Mui Keng", endAddr: "Siglap Road", startTime: "10.00" },
     // ]
 
+    handleChange = event => {
+        event.preventDefault();
+        this.setState({
+            [event.target.name]: event.target.value
+        })
+    }
 
 
+    handleSubmit =  async (event) => {
+        event.preventDefault();
+        console.log(this.state)
+        let baseurl = "http://localhost:5000";
+        if (process.env.NODE_ENV === 'production') {
+            baseurl = "http://rideshare-app-nus.herokuapp.com";
+        }
+
+        const response = await fetch(`${baseurl}/api/rides?origin=${this.state.origin}&destination=${this.state.destination}&seats=${this.state.passengers}`, {
+            method: 'GET'
+        });
+
+        if (response.ok) {
+            const resp = await response.json();
+
+            this.setState({
+                posts: resp.data
+            });
+        } else {
+            console.log(response.json().message)
+        }
+    }
 
 
     render() {
@@ -68,24 +98,24 @@ export default class SearchRides extends Component {
                 <Container className="mt-5">
                     <Row>
                         <Col xs={4}>
-                            <Form className="formGroup searchRidesForm">
+                            <Form className="formGroup searchRidesForm" onSubmit={this.handleSubmit}>
                                 <h5 className="mb-3">Search for rides</h5>
                                 <FormGroup row>
                                     <Label sm={3}>From</Label>
                                     <Col sm={9}>
-                                        <Input type="text" name="text" id="formStartLocation" placeholder="Enter Start Address" />
+                                        <Input type="text" name="origin" value={this.state.origin} id="formStartLocation" placeholder="Enter Start Address" onChange={this.handleChange}/>
                                     </Col>
                                 </FormGroup>
                                 <FormGroup row>
                                     <Label sm={3}>To</Label>
                                     <Col sm={9}>
-                                        <Input type="text" name="text" id="formStartLocation" placeholder="Enter Start Address" />
+                                        <Input type="text" name="destination" value={this.state.destination} id="formEndLocation" placeholder="Enter Destination Address" onChange={this.handleChange}/>
                                     </Col>
                                 </FormGroup>
                                 <FormGroup row>
                                     <Label sm={3}>Passengers</Label>
                                     <Col sm={9}>
-                                        <Input type="number" name="text" id="formNumPassenger" min="0" max="5" placeholder="Passengers" />
+                                        <Input type="text" name="passengers" value={this.state.passengers} id="formNumPassenger" min="0" max="5" placeholder="Passengers" onChange={this.handleChange}/>
                                     </Col>
                                 </FormGroup>
                                 <div className="clearfix">
@@ -113,15 +143,15 @@ export default class SearchRides extends Component {
                                                     <Col xs={7}>
                                                         <Row>
                                                             <p className="pull-left"><b>Departure:</b></p>
-                                                            <p className="pull-right">{post.startAddr}</p>
+                                                            <p className="pull-right">{post.origin}</p>
                                                         </Row>
                                                         <Row>
                                                             <p className="pull-left"><b>Arrival:    </b></p>
-                                                            <p className="pull-right">{post.endAddr}</p>
+                                                            <p className="pull-right">{post.destination}</p>
                                                         </Row>
                                                         <Row>
                                                             <p className="pull-left"><b>Departure Time:    </b></p>
-                                                            <p className="pull-right">{post.startTime}</p>
+                                                            <p className="pull-right">{post.ridestarttime}</p>
                                                         </Row>
 
 
