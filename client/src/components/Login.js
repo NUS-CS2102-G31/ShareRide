@@ -63,22 +63,11 @@ export default class Login extends Component {
         const { history } = this.props;
 
 
-        // history.push('/');
-
-        // this.props.history.push("/");
-        // console.log('DICKBIG');
-        // alert('kontol');
-
-
-
         if (this.validateForm()) {
-
-
-
             let baseurl = "http://localhost:5000";
-            // if (process.env.NODE_ENV == 'production') {
-            baseurl = "http://rideshare-app-nus.herokuapp.com";
-            // }
+            if (process.env.NODE_ENV == 'production') {
+                baseurl = "http://rideshare-app-nus.herokuapp.com";
+            }
 
             const response = await fetch(`${baseurl}/api/login`, {
                 method: 'POST',
@@ -92,8 +81,6 @@ export default class Login extends Component {
             });
 
             if (response.ok) {
-
-
                 const data = await response.json();
                 localStorage.setItem('myUsernameStorage', this.state.username);
 
@@ -106,18 +93,14 @@ export default class Login extends Component {
                 alert('Login Succesful');
                 history.push('/profile');
 
-
-
-
-
             } else {
                 const err = await response.json();
 
                 this.setState({
                     errorSubmit: true
                 });
-
-                alert(err.message + " possibly due to wrong username and password");
+                console.log(err)
+                alert(`User failed to save`);
             }
         }
     }

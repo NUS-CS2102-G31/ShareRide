@@ -50,14 +50,16 @@ export default class Driver extends Component {
         });
 
         if (response.ok) {
-            const resp = response.json();
+            const resp = await response.json();
+
+            resp.data.avgEarnings = parseFloat(resp.data.avgEarnings).toFixed(2);
 
             this.setState({
                 fullName: resp.data.fullName,
                 username: resp.data.username,
                 email: resp.data.email,
                 phone: resp.data.phone,
-                avgPassengers: resp.data.avpPassengers,
+                avgPassengers: resp.data.totalPassengers,
                 avgEarnings: resp.data.avgEarnings
             });
         }

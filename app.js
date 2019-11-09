@@ -10,9 +10,10 @@ const cors = require('cors');
 const { pool } = require('./config');
 
 const PORT = process.env.PORT || 5000;
+const moment = require('moment');
 
 let search_path = "SELECT 1;";
-if (process.env.NODE_ENV == 'production') {
+if (process.env.NODE_ENV === 'production') {
     search_path = "SET search_path TO rideshare;";
     app.use(express.static("client/build"));
 }
@@ -63,10 +64,12 @@ app.post('/api/signup', async (req, res) => {
 app.post('/api/login', (req, res) => {
     const username = req.body.username;
     const password = req.body.password;
+    console.log(req.body)
     pool.query(`${search_path}
         SELECT * FROM users WHERE users.username = '${username}';`, (err, results) => {
         const queryResult = results[1];
-
+        
+        console.log(queryResult)
         if (queryResult.rowCount > 0) {
             let hash = queryResult.rows[0].password;
             bcrypt.compare(password, hash, (err, result) => {
@@ -129,21 +132,138 @@ app.get('/api/profile', (req, res) => {
     const username = req.query.username;
     
     pool.query(`${search_path}
-        `, (err, results) => {
+        SELECT * FROM Users WHERE Users.username = '${username}';`, (err, results) => {
             if (err) {
                 res.status(500).json({
                     message: err
                 });
             } else {
                 const queryResult = results[1];
-                const rides = queryResult.rows;
-                
-                res.status(200).json({
-                    data: rides,
-                    message: `${queryResult.rowCount} number of rides are retrieved`
-                });
+                let profileData = {};
+
+                if (queryResult.rowCount) {
+                    profileData = queryResult.rows[0];
+                    pool.query(`${search_path}
+                        WITH DriverAveEarnings AS (
+                            SELECT R.driver, AVG(price) avePrice
+                            FROM Rides R
+                            WHERE R.price IS NOT NULL 
+                            GROUP BY R.driver
+                        ),
+            
+                        PassengersPerRide AS (
+                            SELECT b.rideId, r.driver, COUNT(DISTINCT passenger) total_passengers
+                            FROM Bookings b
+                            INNER JOIN Rides r
+                            ON r.rideId = b.rideId
+                            WHERE b.paymentStatus = 2
+                            GROUP BY b.rideId, r.driver
+                        )
+            
+                        SELECT d.driver, d.avePrice AS avg_earnings, p.total_passengers AS total_passengers
+                        FROM DriverAveEarnings d, PassengersPerRide p
+                        WHERE d.driver = p.driver AND LOWER(d.driver) = LOWER('${username}');`, (err, results) => {
+                            let stats = results[1];
+                            
+                            if (stats.rowCount) {
+                                let statsData = stats.rows[0];
+                                let data = {
+                                    fullName: profileData.fullName,
+                                    username: profileData.username,
+                                    email: profileData.email,
+                                    phone: profileData.phone,
+                                    totalPassengers: statsData.total_passengers,
+                                    avgEarnings: statsData.avg_earnings
+                                };
+
+                                res.status(200).json({
+                                    data: data,
+                                    message: `Profile data is as shown for user`
+                                });
+                            } else {                
+                                let data = {
+                                    fullName: profileData.fullName,
+                                    username: profileData.username,
+                                    email: profileData.email,
+                                    phone: profileData.phone,
+                                    totalPassengers: 0,
+                                    avgEarnings: 0
+                                }
+                                
+                                res.status(200).json({
+                                    data: data,
+                                    message: `No data found for driver, drive more!`
+                                });
+                            }   
+
+                        });     
+                } else {
+                    res.status(400).json({
+                        message: `User ${username} profile data not found`
+                    });
+                }
             }
     });    
+});
+
+
+/**
+ * POST Adverstise Ride
+ */
+app.post('/api/advertise', (req, res) => {
+    const origin = req.body.origin;
+    const destination = req.body.destination;
+    const date = req.body.date;
+    const startTime = req.body.startTime;
+    const endTime = req.body.endTime;
+    const startBid = req.body.startBid;
+    const username = req.body.username;
+
+    const startTimeDate = moment(`${date} ${startTime}`, "YYYY-MM-DD HH:mm").format("YYYY-MM-DD HH:mm:ssZ");
+    console.log(startTimeDate)
+
+    pool.query(`${search_path}
+        INSERT INTO Rides(rideId, rideStartTime, routeId, car, driver, status) 
+        SELECT '${startTime}', 1, Drivers.car, '${username}', 1
+        FROM Drivers
+        WHERE Drivers.username = '${username}';
+        INSERT INTO Advertisements(adId, startingBid, bidEndTime, rideId, advertiser)
+        SELECT ${startBid}, '${endTime}', MAX(rideId), '${driver}' FROM Rides;`, (err, results) => {
+            let result = results[1];
+            if (result.rowCount) {
+                
+            } else {
+
+            }
+        });
+
+});
+
+/**
+ * POST Change Password
+ */
+app.post('/api/reset', (req, res) => {
+    const username = req.body.username;
+    const password = req.body.password;
+
+    bcrypt.hash(password, parseInt(process.env.SALT_ROUNDS) || 10, (err, hash) => {
+        pool.query(`${search_path}
+            UPDATE users 
+            SET password = '${hash}'
+            WHERE username = '${username}';`, (err, result) => {
+            if (err) {
+                res.status(400).json({
+                    message: `User failed to change password: ${username}`,
+                    error: err
+                });
+            } else {
+                res.status(200).json({
+                    message: `User changed password: ${username}`
+                });
+            }
+        });
+    });
+        
 });
 
 
