@@ -34,7 +34,7 @@
 
 .post-price{
     font-size:30px;
-    transform: translateY(100%);
+    /* transform: translateY(50%); */
     color : #00A372;
 }
 /* 
@@ -45,3 +45,7 @@
     
     border-bottom:1px solid #313030;
 } */
+
+.rides-list small{
+    display:block;
+}

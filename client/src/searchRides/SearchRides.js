@@ -23,41 +23,16 @@ export default class SearchRides extends Component {
             origin: '',
             destination: '',
             passengers: 0,
-            posts: []
+            posts: [],
+
+            yourBid: ''
         };
     }
 
 
 
-    // componentDidMount() {
-    //     // I will use fake api from jsonplaceholder website
-    //     // this return 100 posts 
-    //     fetch("https://jsonplaceholder.typicode.com/posts")
-    //         .then(response => response.json())
-    //         .then(
-    //             // handle the result
-    //             (result) => {
-    //                 this.setState({
-    //                     isLoaded: true,
-    //                     posts: result
-    //                 });
-    //             },
-    //             // Handle error 
-    //             (error) => {
-    //                 this.setState({
-    //                     isLoaded: true,
-    //                     error
-    //                 })
-    //             },
-    //         )
-    // }
 
 
-    // data: [
-    //     { id: 1, driver: "Agus Sulistio", car: "Honda Jazz", price: "10", startAddr: "Heng Mui Keng", endAddr: "Siglap Road", startTime: "10.00" },
-    //     { id: 2, driver: "Bambang Hermawan", car: "Mitsubishi", price: "12", startAddr: "Heng Mui Keng", endAddr: "Siglap Road", startTime: "10.00" },
-    //     { id: 3, driver: "Candra Winata", car: "Honda Jazz", price: "10", startAddr: "Heng Mui Keng", endAddr: "Siglap Road", startTime: "10.00" },
-    // ]
 
     handleChange = event => {
         event.preventDefault();
@@ -67,7 +42,7 @@ export default class SearchRides extends Component {
     }
 
 
-    handleSubmit =  async (event) => {
+    handleSubmit = async (event) => {
         event.preventDefault();
         let baseurl = "http://localhost:5000";
         if (process.env.NODE_ENV === 'production') {
@@ -100,9 +75,9 @@ export default class SearchRides extends Component {
     }
 
 
-    render() {
-        const { posts } = this.state;
 
+
+    render() {
         return (
             <div className="advertiseForm">
                 <Container className="mt-5">
@@ -113,19 +88,19 @@ export default class SearchRides extends Component {
                                 <FormGroup row>
                                     <Label sm={3}>From</Label>
                                     <Col sm={9}>
-                                        <Input type="text" name="origin" value={this.state.origin} id="formStartLocation" placeholder="Enter Start Address" onChange={this.handleChange}/>
+                                        <Input type="text" name="origin" value={this.state.origin} id="formStartLocation" placeholder="Enter Start Address" onChange={this.handleChange} />
                                     </Col>
                                 </FormGroup>
                                 <FormGroup row>
                                     <Label sm={3}>To</Label>
                                     <Col sm={9}>
-                                        <Input type="text" name="destination" value={this.state.destination} id="formEndLocation" placeholder="Enter Destination Address" onChange={this.handleChange}/>
+                                        <Input type="text" name="destination" value={this.state.destination} id="formEndLocation" placeholder="Enter Destination Address" onChange={this.handleChange} />
                                     </Col>
                                 </FormGroup>
                                 <FormGroup row>
                                     <Label sm={3}>Passengers</Label>
                                     <Col sm={9}>
-                                        <Input type="text" name="passengers" value={this.state.passengers} id="formNumPassenger" min="0" max="5" placeholder="Passengers" onChange={this.handleChange}/>
+                                        <Input type="text" name="passengers" value={this.state.passengers} id="formNumPassenger" min="0" max="5" placeholder="Passengers" onChange={this.handleChange} />
                                     </Col>
                                 </FormGroup>
                                 <div className="clearfix">
@@ -134,11 +109,9 @@ export default class SearchRides extends Component {
                             </Form>
                         </Col>
                         <Col xs="8">
-
-
-                            <div>
+                            <div >
                                 {
-                                    posts.map(post =>
+                                    this.state.posts.map(post =>
                                         <div key={post.id} align="start" className="rides-list mb-3 line-separator">
                                             <Container>
                                                 <Row>
@@ -148,6 +121,10 @@ export default class SearchRides extends Component {
                                                         </Row>
                                                         <Row>
                                                             <small className="post-car">{post.car}</small>
+
+                                                        </Row>
+                                                        <Row>
+                                                            <small className="post-capacity">{post.capacity + " seats available"} </small>
                                                         </Row>
                                                     </Col>
                                                     <Col xs={7}>
@@ -163,37 +140,36 @@ export default class SearchRides extends Component {
                                                             <p className="pull-left"><b>Departure Time:&nbsp;</b></p>
                                                             <p className="pull-right">{post.ridestarttime}</p>
                                                         </Row>
-
-
-
+                                                        <Row>
+                                                            <p className="pull-left"><b>Departure Time</b></p>
+                                                            <p className="pull-right">
+                                                                {" " + " : " + post.startTime}</p>
+                                                        </Row>
                                                     </Col>
                                                     <Col xs={2}>
-                                                        <h5 className="post-price">{post.price}</h5>
+                                                        <Row>
+                                                            <h5 className="post-price">{post.price}</h5>
+                                                        </Row>
+                                                        <Row>
+                                                            <Label>Enter Your Bid : ($)</Label>
+                                                            <input ref="yourBid" type="number" name="text" step="0.1" id="formEndTime" placeholder="Enter Starting Bid" />
+                                                            <small>{this.state.startBidError}</small>
+                                                        </Row>
+
                                                     </Col>
                                                 </Row>
-
-
                                             </Container>
-
-
                                         </div>
                                     )
                                 }
                             </div>
-
-
-
                         </Col>
                     </Row>
-
-
                 </Container>
-
             </div >
-
-
         )
     }
 
-}
 
+
+}
