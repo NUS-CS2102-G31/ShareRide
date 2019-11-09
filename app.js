@@ -101,12 +101,13 @@ app.post('/api/login', (req, res) => {
 app.get('/api/rides', (req, res) => {
     const origin = req.query.origin;
     const destination = req.query.destination;
+    const seats = req.query.seats;
     
     pool.query(`${search_path}
-        SELECT Rides.driver, Rides.car, Routes.origin, Routes.destination, Rides.ridestarttime, Cars.numseats FROM Rides 
+        SELECT Rides.driver, Rides.car, Routes.origin, Routes.destination, Rides.rideStartTime, Cars.numSeats FROM Rides 
         INNER JOIN Routes ON Rides.routeId = Routes.routeId 
         INNER JOIN Cars ON Cars.carplate = Rides.car
-        WHERE Routes.origin = '${origin}' AND Routes.destination = '${destination}'`, (err, results) => {
+        WHERE Routes.origin = '${origin}' AND Routes.destination = '${destination}' AND NOW() <= Rides.rideStartTime AND Cars.numSeats >= ${seats};`, (err, results) => {
             if (err) {
                 res.status(500).json({
                     message: err
