@@ -12,6 +12,7 @@ import {
     Input
 
 } from "reactstrap";
+import moment from 'moment';
 
 
 
@@ -100,7 +101,7 @@ export default class CreateRideForm extends Component {
             baseUrl = "http://rideshare-app-nus.herokuapp.com";
         }
 
-        const username = localStorage.getItem('username');
+        const username = localStorage.getItem('myUsernameStorage');
         if (!username) {
             alert('You are not logged in');
             history.push('/login');
@@ -123,24 +124,29 @@ export default class CreateRideForm extends Component {
         })
 
         if (response.ok) {
+            const datas = await response.json();
+            this.setState({
+                datas: datas
+            });
+        } else {
 
         }
 
 
 
-        datas.push(data);
+        // datas.push(data);
 
-        this.setState({
-            datas: datas,
-            act: 0
-        });
-
-
+        // this.setState({
+        //     datas: datas,
+        //     act: 0
+        // });
 
 
 
-        this.refs.myForm.reset();
-        this.refs.startAddr.focus();
+
+
+        // this.refs.myForm.reset();
+        // this.refs.startAddr.focus();
     }
 
     fRemove = (i) => {
@@ -234,17 +240,17 @@ export default class CreateRideForm extends Component {
                                         <Container>
                                             <Row>
                                                 <Col xs={5}>
-                                                    <Row><label>From :</label>   {data.startAddr}  </Row>
-                                                    <Row><label>To   :</label>  {data.endAddr}  </Row>
+                                                    <Row><label>From :</label>   {data.origin}  </Row>
+                                                    <Row><label>To   :</label>  {data.destination}  </Row>
                                                 </Col>
                                                 <Col xs={5}>
-                                                    <Row><label>Date       :</label>{data.date} </Row>
-                                                    <Row><label>Start Time :</label>{data.startTime} </Row>
-                                                    <Row><label>End Time   :</label>{data.endTime} </Row>
+                                                    {/* <Row><label>Date       :</label>{data.date} </Row> */}
+                                                    <Row><label>Ride Start Time :</label>{moment(data.ridestarttime).format("dddd, MMMM Do YYYY, h:mm a")} </Row>
+                                                    <Row><label>End Time   :</label>{moment(data.bidendtime).format("dddd, MMMM Do YYYY, h:mm a")} </Row>
                                                 </Col>
-                                                <Col xs={2}>
+                                                {/* <Col xs={2}>
                                                     <Row><label>Starting Bid :</label>{data.startBid}</Row>
-                                                </Col>
+                                                </Col> */}
                                             </Row>
                                             <Row>
 

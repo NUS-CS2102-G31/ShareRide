@@ -211,8 +211,8 @@ app.get('/api/profile', (req, res) => {
  * POST Adverstise Ride
  */
 app.post('/api/advertise', (req, res) => {
-    const origin = req.body.origin;
-    const destination = req.body.destination;
+    // const origin = req.body.origin;
+    // const destination = req.body.destination;
     const date = req.body.date;
     const startTime = req.body.startTime;
     const endTime = req.body.endTime;
@@ -220,21 +220,27 @@ app.post('/api/advertise', (req, res) => {
     const username = req.body.username;
 
     const startTimeDate = moment(`${date} ${startTime}`, "YYYY-MM-DD HH:mm").format("YYYY-MM-DD HH:mm:ssZ");
-    console.log(startTimeDate)
+    const endTimeDate = moment(`${date} ${endTime}`, "YYYY-MM-DD HH:mm").format("YYYY-MM-DD HH:mm:ssZ");
 
     pool.query(`${search_path}
         INSERT INTO Rides(rideId, rideStartTime, routeId, car, driver, status) 
-        SELECT '${startTime}', 1, Drivers.car, '${username}', 1
+        SELECT '${startTimeDate}', 1, Drivers.car, '${username}', 1
         FROM Drivers
         WHERE Drivers.username = '${username}';
         INSERT INTO Advertisements(adId, startingBid, bidEndTime, rideId, advertiser)
-        SELECT ${startBid}, '${endTime}', MAX(rideId), '${driver}' FROM Rides;`, (err, results) => {
-            let result = results[1];
-            if (result.rowCount) {
+        SELECT ${startBid}, '${endTimeDate}', MAX(rideId), '${username}' FROM Rides;`, (err, results) => {
+            // let result = results[1];
+            
+            pool.query(`${search_path}
+                SELECT * FROM Rides
+                NATURAL JOIN Advertisements A
+                NATURAL JOIN Routes R
+                WHERE Rides.Driver = '${username}';`, (err, results) => {
+                    console.log(err)
+                    const query = results[1];
 
-            } else {
-
-            }
+                    res.status(200).json(query.rows);
+            });
         });
 
 });

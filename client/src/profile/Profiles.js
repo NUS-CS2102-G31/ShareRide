@@ -21,7 +21,7 @@ class Profiles extends Component {
                         <Profile className="Profile-box" imgsrc={img1} title="Driver" button="Drive Now" link="/driver" />
                     </Col>
                     <Col>
-                        <Profile className="Profile-box" imgsrc={img2} title="Passenger" button="Ride Now" link="/forms" />
+                        <Profile className="Profile-box" imgsrc={img2} title="Passenger" button="Ride Now" link="/searchRides" />
                     </Col>
                 </Row>
             </Container>
