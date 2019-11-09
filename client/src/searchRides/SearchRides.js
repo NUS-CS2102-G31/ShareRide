@@ -42,7 +42,6 @@ export default class SearchRides extends Component {
 
     handleSubmit = async (event) => {
         event.preventDefault();
-        console.log(this.state)
         let baseurl = "http://localhost:5000";
         if (process.env.NODE_ENV === 'production') {
             baseurl = "http://rideshare-app-nus.herokuapp.com";
@@ -54,6 +53,10 @@ export default class SearchRides extends Component {
 
         if (response.ok) {
             const resp = await response.json();
+
+            resp.data.forEach(async (val, idx, arr) => {
+                arr[idx].ridestarttime = moment(val.ridestarttime).format("dddd, MMMM Do YYYY, h:mm a");
+            })
 
             this.setState({
                 posts: resp.data
@@ -132,15 +135,15 @@ export default class SearchRides extends Component {
                                                     </Col>
                                                     <Col xs={7}>
                                                         <Row>
-                                                            <p className="pull-left"><b>Departure:</b></p>
+                                                            <p className="pull-left"><b>Departure: &nbsp;</b></p>
                                                             <p className="pull-right">{post.origin}</p>
                                                         </Row>
                                                         <Row>
-                                                            <p className="pull-left"><b>Arrival:    </b></p>
+                                                            <p className="pull-left"><b>Arrival:&nbsp;</b></p>
                                                             <p className="pull-right">{post.destination}</p>
                                                         </Row>
                                                         <Row>
-                                                            <p className="pull-left"><b>Departure Time:    </b></p>
+                                                            <p className="pull-left"><b>Departure Time:&nbsp;</b></p>
                                                             <p className="pull-right">{post.ridestarttime}</p>
                                                         </Row>
                                                         <Row>
