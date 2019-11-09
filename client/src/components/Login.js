@@ -62,6 +62,7 @@ export default class Login extends Component {
         event.preventDefault();
         const { history } = this.props;
 
+
         // history.push('/');
 
         // this.props.history.push("/");
@@ -73,7 +74,7 @@ export default class Login extends Component {
         if (this.validateForm()) {
 
 
-            // alert('kontol');
+
             let baseurl = "http://localhost:5000";
             // if (process.env.NODE_ENV == 'production') {
             baseurl = "http://rideshare-app-nus.herokuapp.com";
@@ -92,7 +93,10 @@ export default class Login extends Component {
 
             if (response.ok) {
 
+
                 const data = await response.json();
+                localStorage.setItem('myUsernameStorage', this.state.username);
+
                 this.setState({
                     username: '',
                     password: '',
@@ -101,6 +105,9 @@ export default class Login extends Component {
                 //HISTORY PUSH IS A REACT ROUTER LIBRARY THAT 
                 alert('Login Succesful');
                 history.push('/profile');
+
+
+
 
 
             } else {

@@ -8,6 +8,7 @@ import DriverForm from './forms/DriverForm'
 import CreateRideForm from './forms/CreateRideForm'
 import Home from './components/Home';
 import Login from './components/Login';
+import Driver from './profile/Driver';
 
 import SearchRides from './searchRides/SearchRides';
 
@@ -17,6 +18,7 @@ import {
   Link
 } from "react-router-dom";
 import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 function App() {
   return (
@@ -48,6 +50,7 @@ function App() {
       <Route path="/forms" component={DriverForm} />
       <Route path="/advertiseRide" component={CreateRideForm} />
       <Route path="/searchRides" component={SearchRides} />
+      <Route path="/driver" component={Driver} />
 
     </Router >
   );

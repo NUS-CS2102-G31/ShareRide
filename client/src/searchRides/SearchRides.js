@@ -13,6 +13,7 @@ import {
 
 } from "reactstrap";
 import posts from './rides.js';
+import moment from "moment";
 
 
 export default class SearchRides extends Component {
@@ -20,45 +21,20 @@ export default class SearchRides extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            posts: posts
+            posts: []
         };
     }
 
 
 
-    // componentDidMount() {
-    //     // I will use fake api from jsonplaceholder website
-    //     // this return 100 posts 
-    //     fetch("https://jsonplaceholder.typicode.com/posts")
-    //         .then(response => response.json())
-    //         .then(
-    //             // handle the result
-    //             (result) => {
-    //                 this.setState({
-    //                     isLoaded: true,
-    //                     posts: result
-    //                 });
-    //             },
-    //             // Handle error 
-    //             (error) => {
-    //                 this.setState({
-    //                     isLoaded: true,
-    //                     error
-    //                 })
-    //             },
-    //         )
-    // }
 
+    handleSubmit = async event => {
+        event.preventDefault();
 
-    // data: [
-    //     { id: 1, driver: "Agus Sulistio", car: "Honda Jazz", price: "10", startAddr: "Heng Mui Keng", endAddr: "Siglap Road", startTime: "10.00" },
-    //     { id: 2, driver: "Bambang Hermawan", car: "Mitsubishi", price: "12", startAddr: "Heng Mui Keng", endAddr: "Siglap Road", startTime: "10.00" },
-    //     { id: 3, driver: "Candra Winata", car: "Honda Jazz", price: "10", startAddr: "Heng Mui Keng", endAddr: "Siglap Road", startTime: "10.00" },
-    // ]
+        let baseurl = "http://rideshare-app-nus.herokuapp.com";
 
-
-
-
+        // fetch(`${baseurl}/api/rides?origin=${this.state.}&destination=${this.state}`)
+    }
 
     render() {
         const { posts } = this.state;
@@ -96,7 +72,7 @@ export default class SearchRides extends Component {
                         <Col xs="8">
 
 
-                            <div>
+                            <div >
                                 {
                                     posts.map(post =>
                                         <div key={post.id} align="start" className="rides-list mb-3 line-separator">
@@ -108,34 +84,34 @@ export default class SearchRides extends Component {
                                                         </Row>
                                                         <Row>
                                                             <small className="post-car">{post.car}</small>
+
+                                                        </Row>
+                                                        <Row>
+                                                            <small className="post-capacity">{post.capacity + " seats available"} </small>
                                                         </Row>
                                                     </Col>
                                                     <Col xs={7}>
                                                         <Row>
-                                                            <p className="pull-left"><b>Departure:</b></p>
-                                                            <p className="pull-right">{post.startAddr}</p>
+                                                            <p className="pull-left"><b>Departure  </b></p>
+                                                            <p className="pull-right">{" " + " : " + post.startAddr}</p>
                                                         </Row>
                                                         <Row>
-                                                            <p className="pull-left"><b>Arrival:    </b></p>
-                                                            <p className="pull-right">{post.endAddr}</p>
+                                                            <p className="pull-left"><b>Arrival </b></p>
+                                                            <p className="pull-right">{" " + " : " + post.endAddr}</p>
                                                         </Row>
                                                         <Row>
-                                                            <p className="pull-left"><b>Departure Time:    </b></p>
-                                                            <p className="pull-right">{post.startTime}</p>
+
+                                                            <p className="pull-left"><b>Departure Time</b></p>
+
+                                                            <p className="pull-right">
+                                                                {" " + " : " + post.startTime}</p>
                                                         </Row>
-
-
-
                                                     </Col>
                                                     <Col xs={2}>
                                                         <h5 className="post-price">{post.price}</h5>
                                                     </Col>
                                                 </Row>
-
-
                                             </Container>
-
-
                                         </div>
                                     )
                                 }
@@ -145,15 +121,9 @@ export default class SearchRides extends Component {
 
                         </Col>
                     </Row>
-
-
                 </Container>
-
             </div >
-
-
         )
     }
-
 }
 

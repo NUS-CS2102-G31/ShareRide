@@ -18,7 +18,7 @@ class Profiles extends Component {
 
                 <Row className="justify-content-md-center">
                     <Col>
-                        <Profile className="Profile-box" imgsrc={img1} title="Driver" button="Drive Now" link="/advertiseRide" />
+                        <Profile className="Profile-box" imgsrc={img1} title="Driver" button="Drive Now" link="/driver" />
                     </Col>
                     <Col>
                         <Profile className="Profile-box" imgsrc={img2} title="Passenger" button="Ride Now" link="/forms" />
