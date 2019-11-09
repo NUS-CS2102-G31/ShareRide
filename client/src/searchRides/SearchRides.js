@@ -46,7 +46,7 @@ export default class SearchRides extends Component {
         event.preventDefault();
         let baseurl = "http://localhost:5000";
         if (process.env.NODE_ENV === 'production') {
-            baseurl = "http://rideshare-app-nus.herokuapp.com";
+            baseurl = "https://rideshare-app-nus.herokuapp.com";
         }
 
         const response = await fetch(`${baseurl}/api/rides?origin=${this.state.origin}&destination=${this.state.destination}&seats=${this.state.passengers}`, {
@@ -79,10 +79,11 @@ export default class SearchRides extends Component {
         e.preventDefault();
         let baseurl = "http://localhost:5000";
         if (process.env.NODE_ENV === 'production') {
-            baseurl = "http://rideshare-app-nus.herokuapp.com";
+            baseurl = "https://rideshare-app-nus.herokuapp.com";
         }
 
-        if 
+
+        
 
     }
 

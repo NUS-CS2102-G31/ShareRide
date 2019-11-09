@@ -66,7 +66,7 @@ export default class Login extends Component {
         if (this.validateForm()) {
             let baseurl = "http://localhost:5000";
             if (process.env.NODE_ENV == 'production') {
-                baseurl = "http://rideshare-app-nus.herokuapp.com";
+                baseurl = "https://rideshare-app-nus.herokuapp.com";
             }
 
             const response = await fetch(`${baseurl}/api/login`, {

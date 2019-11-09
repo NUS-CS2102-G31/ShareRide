@@ -52,9 +52,9 @@ export default class CreateRideForm extends Component {
 
     async componentDidMount() {
         let baseurl = "http://localhost:5000";
-        // if (process.env.NODE_ENV === 'production') {
-        baseurl = "http://rideshare-app-nus.herokuapp.com";
-        // }
+        if (process.env.NODE_ENV === 'production') {
+            baseurl = "https://rideshare-app-nus.herokuapp.com";
+        }
 
         const response = await fetch(`${baseurl}/api/routes`, {
             method: 'GET'
@@ -118,9 +118,9 @@ export default class CreateRideForm extends Component {
         let data = { date, startTime, endTime, startBid }
 
         let baseUrl = `http://localhost:5000`;
-        // if (process.env.NODE_ENV === "production") {
-        baseUrl = "http://rideshare-app-nus.herokuapp.com";
-        // }
+        if (process.env.NODE_ENV === "production") {
+            baseUrl = "https://rideshare-app-nus.herokuapp.com";
+        }
 
 
 

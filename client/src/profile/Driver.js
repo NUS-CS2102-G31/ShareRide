@@ -36,7 +36,7 @@ export default class Driver extends Component {
 
         let baseurl = "http://localhost:5000";
         if (process.env.NODE_ENV === 'production') {
-            baseurl = "http://rideshare-app-nus.herokuapp.com";
+            baseurl = "https://rideshare-app-nus.herokuapp.com";
         }
 
         let username = localStorage.getItem('myUsernameStorage');
