@@ -84,11 +84,6 @@ export default class SearchRides extends Component {
 
     }
 
-
-
-
-
-
     render() {
         return (
             <div className="advertiseForm">
