@@ -39,8 +39,8 @@ export default class Driver extends Component {
                     <p className="username">{this.state.username}</p>
                     <p className="title">{this.state.email}</p>
                     <p className="title">{this.state.phone}</p>
-                    <p className="complex-query">Average Passengers/Rides &nbsp; : {this.state.avgPassengers}</p>
-                    <p className="complex-query">Av{this.state.avgEarnings}</p>
+                    <p className="complex-query"><b>Avg Passengers/Rides &nbsp; : &nbsp; </b> {this.state.avgPassengers}</p>
+                    <p className="complex-query"><b>Avg Earnings &nbsp; : &nbsp; </b> {this.state.avgEarnings}</p>
                 </div>
 
             </div>
